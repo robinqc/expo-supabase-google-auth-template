@@ -5,7 +5,7 @@ import { CrudItem as CrudItemType, SortableColumn, StickyColumnConfig, TableColu
 import React from "react";
 import { ActivityIndicator, FlatList, RefreshControl, View } from "react-native";
 import { CrudItem } from "./CrudItem";
-import { CrudTable } from "./CrudTable";
+import { CrudTable } from "./CrudTableNG";
 
 interface CrudListProps<T = CrudItemType> {
     items: T[];
