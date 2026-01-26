@@ -6,14 +6,14 @@ import { ScrollView, ScrollViewProps, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Text } from "./Text";
 
-interface ViewWithHeaderProps {
+interface HeaderViewProps {
     title: string;
     actionButton?: React.ReactNode;
     children: React.ReactNode;
     scrollViewProps?: ScrollViewProps;
 }
 
-export function ViewWithHeader({ title, actionButton, children, scrollViewProps }: ViewWithHeaderProps) {
+export function HeaderView({ title, actionButton, children, scrollViewProps }: HeaderViewProps) {
     const { isDark } = useTheme();
 
     const styles = useThemedStyles((colors) => ({
