@@ -45,16 +45,13 @@ export function CrudFilterBar({ viewMode, onViewModeChange, sortOption, onSortCh
     const viewSegments = [
         { value: "list", icon: "list" as const },
         { value: "grid", icon: "grid" as const },
+        { value: "table", icon: "menu" as const },
     ];
 
     return (
         <View style={styles.container}>
             <View style={styles.leftSection}>
-                {onFilterPress && (
-                    <Button variant="secondary" size="sm" icon="filter" onPress={onFilterPress}>
-                        Filter
-                    </Button>
-                )}
+                {onFilterPress && <Button variant="secondary" size="sm" icon="filter" onPress={onFilterPress}></Button>}
                 <CrudSortButton value={sortOption} onChange={onSortChange} sortableColumns={sortableColumns} />
             </View>
             <View style={styles.rightSection}>

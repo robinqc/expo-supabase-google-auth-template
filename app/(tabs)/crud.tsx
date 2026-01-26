@@ -7,7 +7,7 @@ import { useCrudItems } from "@/hooks/useCrudItems";
 import { deleteCrudItem } from "@/lib/crud";
 import { layouts, spacing, useThemedStyles } from "@/lib/styles";
 import { showToast } from "@/lib/toast";
-import { CrudFilters, SortOption, ViewMode } from "@/types/crud";
+import { CrudFilters, CrudItem, SortOption, TableColumn, ViewMode } from "@/types/crud";
 import { router } from "expo-router";
 import { StatusBar } from "expo-status-bar";
 import React, { useState } from "react";
@@ -67,6 +67,82 @@ export default function CrudScreen() {
 
     const sortableColumns = [{ id: "price", label: "Price", column: "price" }];
 
+    // Table columns configuration
+    const tableColumns: TableColumn<CrudItem>[] = [
+        {
+            id: "product",
+            label: "PRODUCT",
+            accessor: (item) => (
+                <View style={{ gap: 4 }}>
+                    <Text style={{ color: colors.foreground, fontSize: 14, fontWeight: "600" }}>{item.title}</Text>
+                </View>
+            ),
+            width: 150,
+            sticky: "left",
+        },
+        {
+            id: "category",
+            label: "CATEGORY",
+            accessor: "category",
+            width: 140,
+        },
+        {
+            id: "status",
+            label: "STATUS",
+            accessor: (item) => (
+                <View
+                    style={{
+                        paddingVertical: 4,
+                        paddingHorizontal: 8,
+                        backgroundColor: item.status === "active" ? colors.success + "20" : colors.foregroundSecondary + "20",
+                        borderRadius: 4,
+                        alignSelf: "flex-start",
+                    }}
+                >
+                    <Text style={{ color: item.status === "active" ? colors.success : colors.foregroundSecondary, fontSize: 11, fontWeight: "600", textTransform: "uppercase" }}>
+                        {item.status}
+                    </Text>
+                </View>
+            ),
+            width: 100,
+            align: "center",
+        },
+        {
+            id: "subtitle",
+            label: "DESCRIPTION",
+            accessor: (item) => <Text style={{ color: colors.foregroundSecondary, fontSize: 13 }}>{item.subtitle || "-"}</Text>,
+            width: 200,
+        },
+        {
+            id: "actions",
+            label: "ACTIONS",
+            accessor: (item) => (
+                <View style={{ flexDirection: "row", gap: 8, justifyContent: "center" }}>
+                    <Button
+                        size="sm"
+                        variant="ghost"
+                        icon="create-outline"
+                        onPress={(e: any) => {
+                            e.stopPropagation();
+                            router.push({ pathname: "/crud/create", params: { id: item.id, mode: "edit" } });
+                        }}
+                    />
+                    <Button
+                        size="sm"
+                        variant="ghost"
+                        icon="trash-outline"
+                        onPress={(e: any) => {
+                            e.stopPropagation();
+                            handleDelete(item);
+                        }}
+                    />
+                </View>
+            ),
+            width: 120,
+            align: "center",
+        },
+    ];
+
     return (
         <SafeAreaView style={styles.container} edges={["top", "left", "right"]}>
             <StatusBar style={isDark ? "light" : "dark"} />
@@ -103,12 +179,15 @@ export default function CrudScreen() {
                 onItemDelete={handleDelete}
                 emptyMessage="No items found"
                 sortableColumns={sortableColumns}
+                columns={tableColumns}
+                stickyColumn={{ position: "left", columnId: "product" }}
                 emptyAction={
                     <Button variant="primary" onPress={() => router.push("/crud/create" as any)}>
                         Create your first item
                     </Button>
                 }
             />
+            <View style={{ height: 40 }} />
         </SafeAreaView>
     );
 }

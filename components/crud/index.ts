@@ -1,3 +1,4 @@
-export * from './CrudItem';
-export * from './CrudList';
-export * from './CrudFilterBar';
+export * from "./CrudFilterBar";
+export * from "./CrudItem";
+export * from "./CrudList";
+export * from "./CrudTable";

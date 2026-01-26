@@ -1,10 +1,11 @@
 import { Text } from "@/components/ui/Text";
 import { useTheme } from "@/contexts/ThemeContext";
 import { spacing, useThemedStyles } from "@/lib/styles";
-import { CrudItem as CrudItemType, SortableColumn, ViewMode } from "@/types/crud";
+import { CrudItem as CrudItemType, SortableColumn, StickyColumnConfig, TableColumn, ViewMode } from "@/types/crud";
 import React from "react";
 import { ActivityIndicator, FlatList, RefreshControl, View } from "react-native";
 import { CrudItem } from "./CrudItem";
+import { CrudTable } from "./CrudTable";
 
 interface CrudListProps<T = CrudItemType> {
     items: T[];
@@ -21,6 +22,8 @@ interface CrudListProps<T = CrudItemType> {
     emptyAction?: React.ReactNode;
     keyExtractor?: (item: T) => string;
     sortableColumns?: SortableColumn[];
+    columns?: TableColumn<T>[]; // Required for table view
+    stickyColumn?: StickyColumnConfig; // Optional sticky column config
 }
 
 export function CrudList<T extends CrudItemType = CrudItemType>({
@@ -37,6 +40,8 @@ export function CrudList<T extends CrudItemType = CrudItemType>({
     emptyMessage = "No items found",
     emptyAction,
     keyExtractor = (item) => item.id,
+    columns,
+    stickyColumn,
 }: CrudListProps<T>) {
     const { colors } = useTheme();
 
@@ -111,6 +116,33 @@ export function CrudList<T extends CrudItemType = CrudItemType>({
         return <View style={styles.container}>{renderEmpty()}</View>;
     }
 
+    // Render table view
+    if (viewMode === "table") {
+        if (!columns) {
+            console.warn("CrudList: columns prop is required for table view mode");
+            return <View style={styles.container}>{renderEmpty()}</View>;
+        }
+
+        return (
+            <CrudTable
+                items={items}
+                columns={columns}
+                stickyColumn={stickyColumn}
+                loading={loading}
+                refreshing={refreshing}
+                onRefresh={onRefresh}
+                onLoadMore={onLoadMore}
+                hasMore={hasMore}
+                onItemPress={onItemPress}
+                onItemDelete={onItemDelete}
+                emptyMessage={emptyMessage}
+                emptyAction={emptyAction}
+                keyExtractor={keyExtractor}
+            />
+        );
+    }
+
+    // Render list/grid view
     return (
         <FlatList
             data={items}
