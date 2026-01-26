@@ -49,7 +49,7 @@ export function Button({ variant = "primary", size = "md", loading = false, disa
     // Variant styles
     const variantStyles = {
         primary: {
-            backgroundColor: isDisabled ? colors.muted : colors.foreground,
+            backgroundColor: isDisabled ? colors.foregroundSecondary : colors.foreground,
             textColor: colors.background,
         },
         secondary: {

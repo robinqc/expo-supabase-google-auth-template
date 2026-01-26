@@ -1,24 +1,41 @@
 import { Button, Input, PasswordInput, Text } from "@/components/ui";
 import { GOOGLE_AUTH_ENABLED, useAuth } from "@/contexts/AuthContext";
 import { spacing, useThemedStyles } from "@/lib/styles";
-import { useThemeColors } from "@/lib/theme";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { AuthApiError } from "@supabase/supabase-js";
 import { router } from "expo-router";
 import { StatusBar } from "expo-status-bar";
-import { useCallback, useRef, useState } from "react";
+import { useRef, useState } from "react";
+import { useForm } from "react-hook-form";
 import { Keyboard, KeyboardAvoidingView, Platform, ScrollView, TextInput, TouchableWithoutFeedback, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import Toast from "react-native-toast-message";
+import * as z from "zod";
+
+const loginSchema = z.object({
+    email: z.string().min(1, "Email is required").email("Invalid email format"),
+    password: z.string().min(6, "Password must be at least 6 characters"),
+});
+
+type LoginFormData = z.infer<typeof loginSchema>;
 
 export default function SignIn() {
     const { signIn, signInWithGoogle } = useAuth();
-
-    const colors = useThemeColors();
-
-    const [email, setEmail] = useState("");
-    const [password, setPassword] = useState("");
     const [loading, setLoading] = useState(false);
     const passwordInput = useRef<TextInput>(null);
-    const [showPassword, setShowPassword] = useState(false);
+    const [globalError, setGlobalError] = useState<string | null>(null);
+    const {
+        control,
+        handleSubmit,
+        formState: { errors },
+        setError,
+    } = useForm<LoginFormData>({
+        resolver: zodResolver(loginSchema),
+        defaultValues: {
+            email: "",
+            password: "",
+        },
+    });
 
     const styles = useThemedStyles((colors) => ({
         container: {
@@ -80,22 +97,24 @@ export default function SignIn() {
         },
     }));
 
-    const onSubmit = useCallback(async () => {
-        if (!email || !password) {
-            Toast.show({
-                type: "error",
-                text1: "Error",
-                text2: "Please fill in all fields",
-                position: "bottom",
-            });
-            return;
-        }
-
+    const onSubmit = async (data: LoginFormData) => {
         setLoading(true);
+        setGlobalError(null);
         try {
-            await signIn(email, password);
+            await signIn(data.email, data.password);
             router.replace("/(tabs)");
         } catch (error: any) {
+            if (error instanceof AuthApiError) {
+                if (error.message === "Invalid login credentials") {
+                    setGlobalError("Invalid email or password");
+                }
+                if (error.message === "Email not confirmed") {
+                    setError("email", {
+                        type: "manual",
+                        message: "Email not confirmed",
+                    });
+                }
+            }
             Toast.show({
                 type: "error",
                 text1: "Sign In Failed",
@@ -105,7 +124,7 @@ export default function SignIn() {
         } finally {
             setLoading(false);
         }
-    }, [email, password, signIn]);
+    };
 
     const onGoogleSignIn = async () => {
         try {
@@ -147,8 +166,8 @@ export default function SignIn() {
                             <View style={styles.formContainer}>
                                 <Input
                                     placeholder="example@gmail.com"
-                                    value={email}
-                                    onChangeText={setEmail}
+                                    control={control}
+                                    name="email"
                                     keyboardType="email-address"
                                     autoCapitalize="none"
                                     autoCorrect={false}
@@ -159,18 +178,24 @@ export default function SignIn() {
                                 />
                                 <PasswordInput
                                     placeholder="Password"
-                                    value={password}
-                                    onChangeText={setPassword}
+                                    control={control}
+                                    name="password"
                                     returnKeyType="done"
-                                    onSubmitEditing={onSubmit}
+                                    onSubmitEditing={handleSubmit(onSubmit)}
                                     autoCapitalize="none"
                                     ref={passwordInput}
                                     label="Password"
+                                    error={errors.password?.message}
                                 />
                             </View>
 
+                            {globalError && (
+                                <Text variant="label" color="error" style={{ marginTop: spacing.md }}>
+                                    {globalError}
+                                </Text>
+                            )}
                             <View style={[styles.buttonContainer, { marginTop: spacing.lg }]}>
-                                <Button onPress={onSubmit} variant="primary" size="md" loading={loading} style={{ flex: 1 }}>
+                                <Button onPress={handleSubmit(onSubmit)} variant="primary" size="md" loading={loading} style={{ flex: 1 }}>
                                     Sign In
                                 </Button>
 

@@ -204,7 +204,7 @@ export default function SignUp() {
                             </View>
 
                             <View style={styles.buttonContainer}>
-                                <Button onPress={onSubmit} variant="primary" size="lg" loading={loading} style={{ flex: 1 }}>
+                                <Button onPress={onSubmit} variant="primary" size="md" loading={loading} style={{ flex: 1 }}>
                                     Create Account
                                 </Button>
                             </View>

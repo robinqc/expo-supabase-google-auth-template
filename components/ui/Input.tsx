@@ -1,6 +1,7 @@
 import { useTheme } from "@/contexts/ThemeContext";
 import { borderRadius, spacing, useThemedStyles } from "@/lib/styles";
 import React, { useState } from "react";
+import { Control, useController } from "react-hook-form";
 import { TextInput, TextInputProps, View } from "react-native";
 import { Button } from "./Button";
 import { Text } from "./Text";
@@ -15,6 +16,8 @@ export interface InputProps extends Omit<TextInputProps, "style"> {
     // add element at the end of the input
     endElement?: React.ReactNode;
     children?: React.ReactNode;
+    control?: Control<any>;
+    name?: string;
 }
 
 const inputStyles = {
@@ -24,7 +27,7 @@ const inputStyles = {
     fontSize: 16,
 };
 
-export function BaseInput({ label, error, helperText, style, containerStyle, ref, endElement, children, ...props }: InputProps) {
+export function BaseInput({ label, error, helperText, containerStyle, children }: Pick<InputProps, "label" | "error" | "helperText" | "containerStyle" | "children">) {
     const styles = useThemedStyles((colors) => ({
         label: {
             marginBottom: spacing.xs,
@@ -33,13 +36,6 @@ export function BaseInput({ label, error, helperText, style, containerStyle, ref
         },
         helperText: {
             marginTop: spacing.xs,
-        },
-        inputContainer: {
-            flexDirection: "row",
-            width: "100%",
-            flex: 1,
-            alignItems: "center",
-            justifyContent: "center",
         },
     }));
 
@@ -65,25 +61,29 @@ export function BaseInput({ label, error, helperText, style, containerStyle, ref
     );
 }
 
-export const PasswordInput: React.FC<InputProps> = ({ value, onChangeText, style, onSubmitEditing, ref, error, ...props }) => {
+export const PasswordInput: React.FC<InputProps> = ({ value, onChangeText, style, onSubmitEditing, ref, error, control, name, ...props }) => {
     const [showPassword, setShowPassword] = useState(false);
     const { colors } = useTheme();
 
+    // Use useController if control and name are provided
+    const controller = control && name ? useController({ control, name }) : null;
+
+    const inputValue = controller ? controller.field.value : value;
+    const inputOnChange = controller ? controller.field.onChange : onChangeText;
+    const inputOnBlur = controller ? controller.field.onBlur : props.onBlur;
+    const inputRef = controller ? controller.field.ref : ref;
+
     return (
-        <BaseInput value={value} error={error} onChangeText={onChangeText} onSubmitEditing={onSubmitEditing} ref={ref} {...props}>
+        <BaseInput label={props.label} error={error || controller?.fieldState.error?.message} helperText={props.helperText} containerStyle={props.containerStyle}>
             <View
                 style={
                     [
                         {
                             backgroundColor: colors.backgroundSecondary,
-                            // @ts-ignore
-                            color: colors.foreground,
-                            borderColor: error ? colors.error : colors.border,
-                            borderWidth: error ? 1 : 0,
-                            flex: 1,
+                            borderColor: error || controller?.fieldState.error ? colors.error : colors.border,
+                            borderWidth: error || controller?.fieldState.error ? 1 : 0,
                             flexDirection: "row",
                             alignItems: "center",
-                            justifyContent: "stretch",
                             borderRadius: borderRadius.lg,
                         },
                         style,
@@ -92,14 +92,19 @@ export const PasswordInput: React.FC<InputProps> = ({ value, onChangeText, style
             >
                 <TextInput
                     placeholderTextColor={colors.foregroundSecondary}
-                    ref={ref as any}
+                    ref={inputRef as any}
                     {...props}
                     style={[
                         inputStyles,
                         {
                             flex: 1,
+                            color: colors.foreground,
                         },
                     ]}
+                    value={inputValue}
+                    onChangeText={inputOnChange}
+                    onBlur={inputOnBlur}
+                    onSubmitEditing={onSubmitEditing}
                     secureTextEntry={!showPassword}
                 />
                 <Button variant="ghost" icon={showPassword ? "eye-off" : "eye"} size="sm" onPress={() => setShowPassword(!showPassword)} />
@@ -108,25 +113,34 @@ export const PasswordInput: React.FC<InputProps> = ({ value, onChangeText, style
     );
 };
 
-export const Input: React.FC<InputProps> = ({ value, error, onChangeText, onSubmitEditing, style, ref, ...props }) => {
+export const Input: React.FC<InputProps> = ({ value, error, onChangeText, onSubmitEditing, style, ref, control, name, ...props }) => {
     const { colors } = useTheme();
+
+    // Use useController if control and name are provided
+    const controller = control && name ? useController({ control, name }) : null;
+
+    const inputValue = controller ? controller.field.value : value;
+    const inputOnChange = controller ? controller.field.onChange : onChangeText;
+    const inputOnBlur = controller ? controller.field.onBlur : props.onBlur;
+    const inputRef = controller ? controller.field.ref : ref;
+
     return (
-        <BaseInput value={value} error={error} onChangeText={onChangeText} onSubmitEditing={onSubmitEditing} ref={ref} {...props}>
+        <BaseInput label={props.label} error={error || controller?.fieldState.error?.message} helperText={props.helperText} containerStyle={props.containerStyle}>
             <TextInput
                 placeholderTextColor={colors.foregroundSecondary}
-                ref={ref as any}
+                ref={inputRef as any}
+                value={inputValue}
+                onChangeText={inputOnChange}
+                onBlur={inputOnBlur}
+                onSubmitEditing={onSubmitEditing}
                 {...props}
                 style={[
                     inputStyles,
                     {
                         backgroundColor: colors.backgroundSecondary,
-                        // @ts-ignore
                         color: colors.foreground,
-                        borderColor: error ? colors.error : colors.border,
-                        borderWidth: error ? 1 : 0,
-                        flex: 1,
-                        flexDirection: "row",
-                        alignItems: "center",
+                        borderColor: error || controller?.fieldState.error ? colors.error : colors.border,
+                        borderWidth: error || controller?.fieldState.error ? 1 : 0,
                         borderRadius: borderRadius.lg,
                     },
                     style,
