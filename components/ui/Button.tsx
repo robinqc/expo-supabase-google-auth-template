@@ -17,9 +17,10 @@ export interface ButtonProps extends Omit<TouchableOpacityProps, "style"> {
     iconPosition?: "left" | "right";
     children?: React.ReactNode;
     style?: TouchableOpacityProps["style"];
+    ref?: React.RefObject<View | null>;
 }
 
-export function Button({ variant = "primary", size = "md", loading = false, disabled = false, icon, iconPosition = "left", children, style, ...props }: ButtonProps) {
+export function Button({ variant = "primary", size = "md", loading = false, disabled = false, icon, iconPosition = "left", children, style, ref, ...props }: ButtonProps) {
     const { colors } = useTheme();
 
     const isDisabled = disabled || loading;
@@ -113,7 +114,7 @@ export function Button({ variant = "primary", size = "md", loading = false, disa
     };
 
     return (
-        <TouchableOpacity style={buttonStyle} disabled={isDisabled} activeOpacity={0.7} {...props}>
+        <TouchableOpacity style={buttonStyle} disabled={isDisabled} activeOpacity={0.7} ref={ref} {...props}>
             {renderContent()}
         </TouchableOpacity>
     );
