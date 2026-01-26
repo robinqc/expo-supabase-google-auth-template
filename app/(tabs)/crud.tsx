@@ -5,7 +5,7 @@ import { useAuth } from "@/contexts/AuthContext";
 import { useTheme } from "@/contexts/ThemeContext";
 import { useCrudItems } from "@/hooks/useCrudItems";
 import { deleteCrudItem } from "@/lib/crud";
-import { layouts, spacing, useThemedStyles } from "@/lib/styles";
+import { borderRadius, layouts, spacing, useThemedStyles } from "@/lib/styles";
 import { showToast } from "@/lib/toast";
 import { CrudFilters, CrudItem, SortOption, TableColumn, ViewMode } from "@/types/crud";
 import { router } from "expo-router";
@@ -95,7 +95,7 @@ export default function CrudScreen() {
                         paddingVertical: 4,
                         paddingHorizontal: 8,
                         backgroundColor: item.status === "active" ? colors.success + "20" : colors.foregroundSecondary + "20",
-                        borderRadius: 4,
+                        borderRadius: borderRadius.full,
                         alignSelf: "flex-start",
                     }}
                 >
@@ -104,7 +104,7 @@ export default function CrudScreen() {
                     </Text>
                 </View>
             ),
-            width: 100,
+            width: 110,
             align: "center",
         },
         {
@@ -187,7 +187,7 @@ export default function CrudScreen() {
                     </Button>
                 }
             />
-            <View style={{ height: 40 }} />
+            <View style={{ height: 100 }} />
         </SafeAreaView>
     );
 }

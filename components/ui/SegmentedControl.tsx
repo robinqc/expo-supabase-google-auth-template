@@ -33,10 +33,9 @@ export function SegmentedControl({ segments, value, onChange, size = "md", style
             alignItems: "center",
             justifyContent: "center",
             paddingVertical: size === "sm" ? spacing.sm : spacing.md,
-            paddingHorizontal: spacing.md,
+            paddingHorizontal: size === "sm" ? spacing.sm : spacing.md,
             borderRadius: borderRadius.full,
             flexDirection: "row",
-            gap: spacing.xs,
         },
         activeSegment: {
             backgroundColor: colors.foreground,
