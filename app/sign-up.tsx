@@ -1,25 +1,45 @@
 import { Button, Input, PasswordInput, Text } from "@/components/ui";
 import { useAuth } from "@/contexts/AuthContext";
 import { spacing, useThemedStyles } from "@/lib/styles";
-import { useThemeColors } from "@/lib/theme";
 import { router } from "expo-router";
 import { useCallback, useRef, useState } from "react";
 import { Keyboard, KeyboardAvoidingView, Platform, ScrollView, TextInput, TouchableWithoutFeedback, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import Toast from "react-native-toast-message";
 
+import { zodResolver } from "@hookform/resolvers/zod";
+import { AuthApiError } from "@supabase/supabase-js";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
+
+const signUpSchema = z
+    .object({
+        name: z.string().min(3, "Name must be at least 3 characters long"),
+        email: z.string().email("Invalid email address"),
+        password: z.string().min(6, "Password must be at least 6 characters long"),
+        confirmPassword: z.string().min(6, "Password must be at least 6 characters long"),
+    })
+    .refine((data) => data.password === data.confirmPassword, {
+        message: "Passwords do not match",
+        path: ["confirmPassword"],
+    });
+
+type SignUpForm = z.infer<typeof signUpSchema>;
+
 export default function SignUp() {
     const { signUp } = useAuth();
-
-    const colors = useThemeColors();
-
-    const [email, setEmail] = useState("");
-    const [name, setName] = useState("");
-    const [password, setPassword] = useState("");
-    const [confirmPassword, setConfirmPassword] = useState("");
     const [loading, setLoading] = useState(false);
     const passwordInput = useRef<TextInput>(null);
     const confirmPasswordInput = useRef<TextInput>(null);
+
+    const {
+        control,
+        handleSubmit,
+        formState: { errors },
+        setError,
+    } = useForm<SignUpForm>({
+        resolver: zodResolver(signUpSchema),
+    });
 
     const styles = useThemedStyles((colors) => ({
         scrollContent: {
@@ -85,58 +105,37 @@ export default function SignUp() {
         },
     }));
 
-    const onSubmit = useCallback(async () => {
-        if (!email || !name || !password || !confirmPassword) {
-            Toast.show({
-                type: "error",
-                text1: "Error",
-                text2: "Please fill in all fields",
-                position: "bottom",
-            });
-            return;
-        }
-
-        if (password !== confirmPassword) {
-            Toast.show({
-                type: "error",
-                text1: "Error",
-                text2: "Passwords do not match",
-                position: "bottom",
-            });
-            return;
-        }
-
-        if (password.length < 6) {
-            Toast.show({
-                type: "error",
-                text1: "Error",
-                text2: "Password must be at least 6 characters",
-                position: "bottom",
-            });
-            return;
-        }
-
-        setLoading(true);
-        try {
-            await signUp(email, password);
-            Toast.show({
-                type: "success",
-                text1: "Account Created",
-                text2: "Please check your email to verify your account",
-                position: "bottom",
-            });
-            router.replace("/sign-in");
-        } catch (error: any) {
-            Toast.show({
-                type: "error",
-                text1: "Sign Up Failed",
-                text2: error.message || "An error occurred",
-                position: "bottom",
-            });
-        } finally {
-            setLoading(false);
-        }
-    }, [email, name, password, confirmPassword, signUp]);
+    const onSubmit = useCallback(
+        async (data: SignUpForm) => {
+            setLoading(true);
+            try {
+                await signUp(data.email, data.password);
+                Toast.show({
+                    type: "success",
+                    text1: "Account Created",
+                    text2: "Please check your email to verify your account",
+                    position: "bottom",
+                });
+                router.replace("/sign-in");
+            } catch (error: any) {
+                if (error instanceof AuthApiError) {
+                    setError("email", {
+                        type: "manual",
+                        message: error.message,
+                    });
+                }
+                Toast.show({
+                    type: "error",
+                    text1: "Sign Up Failed",
+                    text2: error.message || "An error occurred",
+                    position: "bottom",
+                });
+            } finally {
+                setLoading(false);
+            }
+        },
+        [signUp],
+    );
 
     const onSignIn = () => {
         router.push("/sign-in");
@@ -164,8 +163,8 @@ export default function SignUp() {
                             <View style={styles.formContainer}>
                                 <Input
                                     placeholder="Name"
-                                    value={name}
-                                    onChangeText={setName}
+                                    control={control}
+                                    name="name"
                                     autoCapitalize="words"
                                     returnKeyType="next"
                                     onSubmitEditing={() => passwordInput.current?.focus()}
@@ -173,8 +172,8 @@ export default function SignUp() {
                                 />
                                 <Input
                                     placeholder="Email"
-                                    value={email}
-                                    onChangeText={setEmail}
+                                    control={control}
+                                    name="email"
                                     keyboardType="email-address"
                                     autoCapitalize="none"
                                     autoCorrect={false}
@@ -185,8 +184,8 @@ export default function SignUp() {
                                 />
                                 <PasswordInput
                                     placeholder="Password"
-                                    value={password}
-                                    onChangeText={setPassword}
+                                    control={control}
+                                    name="password"
                                     returnKeyType="next"
                                     onSubmitEditing={() => confirmPasswordInput.current?.focus()}
                                     ref={passwordInput}
@@ -194,17 +193,17 @@ export default function SignUp() {
                                 />
                                 <PasswordInput
                                     placeholder="Confirm Password"
-                                    value={confirmPassword}
-                                    onChangeText={setConfirmPassword}
+                                    control={control}
+                                    name="confirmPassword"
                                     returnKeyType="done"
-                                    onSubmitEditing={onSubmit}
+                                    onSubmitEditing={handleSubmit(onSubmit)}
                                     ref={confirmPasswordInput}
                                     label="Confirm Password"
                                 />
                             </View>
 
                             <View style={styles.buttonContainer}>
-                                <Button onPress={onSubmit} variant="primary" size="md" loading={loading} style={{ flex: 1 }}>
+                                <Button onPress={handleSubmit(onSubmit)} variant="primary" size="md" loading={loading} style={{ flex: 1 }}>
                                     Create Account
                                 </Button>
                             </View>
