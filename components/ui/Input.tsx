@@ -103,6 +103,7 @@ export const PasswordInput: React.FC<InputProps> = ({ value, onChangeText, style
                     ]}
                     value={inputValue}
                     onChangeText={inputOnChange}
+                    autoCapitalize="none"
                     onBlur={inputOnBlur}
                     onSubmitEditing={onSubmitEditing}
                     secureTextEntry={!showPassword}
