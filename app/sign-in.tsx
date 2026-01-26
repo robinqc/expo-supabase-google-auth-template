@@ -1,4 +1,4 @@
-import { Button, Input, Text } from "@/components/ui";
+import { Button, Input, PasswordInput, Text } from "@/components/ui";
 import { GOOGLE_AUTH_ENABLED, useAuth } from "@/contexts/AuthContext";
 import { spacing, useThemedStyles } from "@/lib/styles";
 import { useThemeColors } from "@/lib/theme";
@@ -157,16 +157,14 @@ export default function SignIn() {
                                     onSubmitEditing={() => passwordInput.current?.focus()}
                                     label="Email"
                                 />
-                                <Input
+                                <PasswordInput
                                     placeholder="Password"
                                     value={password}
                                     onChangeText={setPassword}
-                                    secureTextEntry={!showPassword}
                                     returnKeyType="done"
                                     onSubmitEditing={onSubmit}
                                     autoCapitalize="none"
                                     ref={passwordInput}
-                                    endElement={<Button variant="ghost" icon="eye" size="sm" onPress={() => setShowPassword(!showPassword)} />}
                                     label="Password"
                                 />
                             </View>

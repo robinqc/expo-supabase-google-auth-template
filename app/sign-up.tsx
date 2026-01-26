@@ -1,11 +1,10 @@
-import { Button, Input, Text } from "@/components/ui";
+import { Button, Input, PasswordInput, Text } from "@/components/ui";
 import { useAuth } from "@/contexts/AuthContext";
 import { spacing, useThemedStyles } from "@/lib/styles";
 import { useThemeColors } from "@/lib/theme";
 import { router } from "expo-router";
-import { StatusBar } from "expo-status-bar";
 import { useCallback, useRef, useState } from "react";
-import { Image, TextInput, View } from "react-native";
+import { Keyboard, KeyboardAvoidingView, Platform, ScrollView, TextInput, TouchableWithoutFeedback, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import Toast from "react-native-toast-message";
 
@@ -23,6 +22,10 @@ export default function SignUp() {
     const confirmPasswordInput = useRef<TextInput>(null);
 
     const styles = useThemedStyles((colors) => ({
+        scrollContent: {
+            flexGrow: 1,
+            justifyContent: "center",
+        },
         container: {
             flex: 1,
             backgroundColor: colors.background,
@@ -65,9 +68,12 @@ export default function SignUp() {
         },
         formContainer: {
             gap: spacing.md,
+            width: "100%",
+            display: "flex",
         },
         buttonContainer: {
             gap: spacing.md,
+            marginTop: spacing.xl,
         },
         signInButton: {
             marginTop: spacing.lg,
@@ -137,77 +143,84 @@ export default function SignUp() {
     };
 
     return (
-        <SafeAreaView style={styles.container} edges={['top', 'left', 'right']}>
-            <StatusBar style="auto" />
-            <View style={styles.content}>
-                <View style={styles.logoContainer}>
-                    <View style={styles.logo}>
-                        <Text style={styles.logoText}>S</Text>
-                    </View>
-                </View>
+        <SafeAreaView style={styles.container} edges={["top", "left", "right"]}>
+            <KeyboardAvoidingView style={{ flex: 1 }} behavior={Platform.OS === "ios" ? "padding" : "height"} keyboardVerticalOffset={Platform.OS === "ios" ? 0 : 20}>
+                <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+                    <ScrollView contentContainerStyle={styles.scrollContent} keyboardShouldPersistTaps="handled" showsVerticalScrollIndicator={false}>
+                        <View style={styles.content}>
+                            <View style={styles.logoContainer}>
+                                <View style={styles.logo}>
+                                    <Text style={styles.logoText}>S</Text>
+                                </View>
+                            </View>
 
-                <Text variant="heading" style={styles.title}>
-                    Create Account
-                </Text>
-                <Text variant="body" color="secondary" style={styles.description}>
-                    Join us and get started with your new account
-                </Text>
+                            <Text variant="heading" style={styles.title}>
+                                Create Account
+                            </Text>
+                            <Text variant="body" color="secondary" style={styles.description}>
+                                Join us and get started with your new account
+                            </Text>
 
-                <View style={styles.formContainer}>
-                    <Input
-                        placeholder="Name"
-                        value={name}
-                        onChangeText={setName}
-                        autoCapitalize="words"
-                        returnKeyType="next"
-                        onSubmitEditing={() => passwordInput.current?.focus()}
-                    />
-                    <Input
-                        placeholder="Email"
-                        value={email}
-                        onChangeText={setEmail}
-                        keyboardType="email-address"
-                        autoCapitalize="none"
-                        autoCorrect={false}
-                        textContentType="emailAddress"
-                        returnKeyType="next"
-                        onSubmitEditing={() => passwordInput.current?.focus()}
-                    />
-                    <Input
-                        placeholder="Password"
-                        value={password}
-                        onChangeText={setPassword}
-                        secureTextEntry
-                        returnKeyType="next"
-                        onSubmitEditing={() => confirmPasswordInput.current?.focus()}
-                        ref={passwordInput}
-                    />
-                    <Input
-                        placeholder="Confirm Password"
-                        value={confirmPassword}
-                        onChangeText={setConfirmPassword}
-                        secureTextEntry
-                        returnKeyType="done"
-                        onSubmitEditing={onSubmit}
-                        ref={confirmPasswordInput}
-                    />
-                </View>
+                            <View style={styles.formContainer}>
+                                <Input
+                                    placeholder="Name"
+                                    value={name}
+                                    onChangeText={setName}
+                                    autoCapitalize="words"
+                                    returnKeyType="next"
+                                    onSubmitEditing={() => passwordInput.current?.focus()}
+                                    label="Name"
+                                />
+                                <Input
+                                    placeholder="Email"
+                                    value={email}
+                                    onChangeText={setEmail}
+                                    keyboardType="email-address"
+                                    autoCapitalize="none"
+                                    autoCorrect={false}
+                                    textContentType="emailAddress"
+                                    returnKeyType="next"
+                                    onSubmitEditing={() => passwordInput.current?.focus()}
+                                    label="Email"
+                                />
+                                <PasswordInput
+                                    placeholder="Password"
+                                    value={password}
+                                    onChangeText={setPassword}
+                                    returnKeyType="next"
+                                    onSubmitEditing={() => confirmPasswordInput.current?.focus()}
+                                    ref={passwordInput}
+                                    label="Password"
+                                />
+                                <PasswordInput
+                                    placeholder="Confirm Password"
+                                    value={confirmPassword}
+                                    onChangeText={setConfirmPassword}
+                                    returnKeyType="done"
+                                    onSubmitEditing={onSubmit}
+                                    ref={confirmPasswordInput}
+                                    label="Confirm Password"
+                                />
+                            </View>
 
-                <View style={styles.buttonContainer}>
-                    <Button onPress={onSubmit} variant="primary" size="lg" loading={loading} style={{ flex: 1 }}>
-                        Create Account
-                    </Button>
-                </View>
+                            <View style={styles.buttonContainer}>
+                                <Button onPress={onSubmit} variant="primary" size="lg" loading={loading} style={{ flex: 1 }}>
+                                    Create Account
+                                </Button>
+                            </View>
 
-                <View style={styles.signInButton}>
-                    <Text color="secondary" style={styles.signInText}>
-                        Already have an account? 
-                    </Text>
-                    <Button onPress={onSignIn} variant="ghost">
-                        Sign In
-                    </Button>
-                </View>
-            </View>
+                            <View style={styles.signInButton}>
+                                <Text color="secondary" style={styles.signInText}>
+                                    Already have an account?
+                                </Text>
+                                <Button onPress={onSignIn} variant="ghost">
+                                    Sign In
+                                </Button>
+                            </View>
+                        </View>
+                    </ScrollView>
+                </TouchableWithoutFeedback>
+            </KeyboardAvoidingView>
         </SafeAreaView>
     );
 }
