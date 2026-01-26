@@ -2,7 +2,7 @@
 
 > A complete starter template for React Native apps with Expo, Supabase authentication, and beautiful theming.
 
-## ✨ Features
+## Features
 
 - **🔐 Authentication**: Email + optional Google Sign-In with Supabase
 - **🎨 Theming**: Light/Dark/System theme with persistence
@@ -11,7 +11,7 @@
 - **⚛️ TypeScript**: Strict mode enabled with full type safety
 - **🎯 Ready to Build**: Production-ready configuration
 
-## 🚀 Quick Start
+## Quick Start
 
 ### Prerequisites
 
@@ -61,7 +61,7 @@ npm start
     npm start
     ```
 
-## 📱 Platform Setup
+## Platform Setup
 
 ### Google Sign-In (Optional)
 
@@ -84,7 +84,7 @@ To enable Google authentication (web-based, works with Expo Go):
 
 > **Note**: This template uses web-based OAuth that works with Expo Go. No native client IDs required.
 
-## 🏗️ Project Structure
+## Project Structure
 
 ```
 expo-supabase-starter/
@@ -122,7 +122,7 @@ expo-supabase-starter/
         └── splash-icon.png  # Splash screen (200x200)
 ```
 
-## 🎨 Theming System
+## Theming System
 
 ### Theme Types
 
@@ -170,7 +170,7 @@ function MyComponent() {
 }
 ```
 
-## 🔐 Authentication
+## Authentication
 
 ### Included Features
 
@@ -227,7 +227,7 @@ const profile = await getUserProfile(userId);
 await updateUserProfile(userId, { name: "New Name" });
 ```
 
-## 🧩 UI Components
+## UI Components
 
 ### Available Components
 
@@ -281,7 +281,7 @@ Form layout wrapper:
 </FormView>
 ```
 
-## 🛠️ Adding Features
+## Adding Features
 
 ### New Screen
 
@@ -369,7 +369,7 @@ export function NewComponent({ title, onPress }: NewComponentProps) {
 }
 ```
 
-## 🗄️ Supabase Database Setup
+## Supabase Database Setup
 
 ### Required Tables
 
@@ -435,7 +435,7 @@ EXPO_PUBLIC_SUPABASE_ANON_KEY=your-production-key
 EXPO_PUBLIC_GOOGLE_WEB_CLIENT_ID=your-production-web-client
 ```
 
-## 🔧 Configuration
+## Configuration
 
 ### TypeScript Configuration
 
@@ -450,47 +450,6 @@ Key settings in `app.json`:
 - **New Architecture**: Enabled for better performance
 - **Gesture Handling**: Enhanced back gesture support
 - **Type Safety**: Strict TypeScript checking
-
-## 🐛 Troubleshooting
-
-### Common Issues
-
-1. **Metro bundler errors**:
-
-    ```bash
-    npx expo install --fix
-    npm start -- --reset-cache
-    ```
-
-2. **Google Sign-In not working**:
-    - Check client IDs in `.env`
-    - Verify OAuth redirect URIs
-    - Ensure Google Console configuration
-
-3. **Theme not persisting**:
-
-    ```bash
-    # Clear AsyncStorage
-    npx expo install --reset
-    npm start
-    ```
-
-4. **Build failures**:
-    ```bash
-    # Clean and rebuild
-    rm -rf node_modules
-    npm install
-    eas build --clear-cache
-    ```
-
-## 📚 API References
-
-- **[Expo Router](https://docs.expo.dev/router/introduction)**
-- **[React Native](https://reactnative.dev/docs/getting-started)**
-- **[Supabase](https://supabase.com/docs/reference/javascript)**
-- **[React Native Vector Icons](https://icons.expo.fyi/)**
-
-## 🤝 Contributing
 
 ### Development Setup
 
@@ -508,35 +467,6 @@ git checkout -b feature/amazing-new-feature
 # Make your changes
 # ... develop ...
 
-# Run tests
-npm run lint
-
 # Submit PR
 git push origin feature/amazing-new-feature
 ```
-
-### Code Style
-
-- Use **TypeScript strictly** - no `any` types
-- Follow **existing patterns** in the codebase
-- Use **theme colors** via the `useTheme` hook
-- **Component composition** over complex inheritance
-
-## 📄 License
-
-MIT License - feel free to use this template for personal and commercial projects.
-
----
-
-## 🙏️ Built With ❤️
-
-Using the best tools and libraries:
-
-- **[Expo](https://expo.dev/)** - React Native framework
-- **[Supabase](https://supabase.com/)** - Backend as a Service
-- **[TypeScript](https://www.typescriptlang.org/)** - Type safety
-- **[React Native](https://reactnative.dev/)** - Native mobile development
-
----
-
-**Happy coding! 🚀**
