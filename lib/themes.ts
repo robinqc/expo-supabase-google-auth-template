@@ -1,111 +1,56 @@
 /**
  * Single source of truth for all theme colors in Expo Supabase Starter.
  * These colors are injected as CSS variables at runtime via ThemeContext.
+ *
+ * Base themes define the semantic color structure.
+ * Tints override most colors to create a cohesive tinted experience.
+ * Only status colors (success, warning, error, info), destructive, rating,
+ * and overlay colors remain constant across tints.
  */
 
-export const themes = {
-    light: {
-        // Backgrounds
-        background: "#f0ebe3", // Warm white
-        backgroundSecondary: "#faf8f5", // Cream
+import { tints, TintName, DEFAULT_TINT } from "./tints";
 
-        // Foreground (text)
-        foreground: "#1c1917", // Warm black
-        foregroundSecondary: "#78716c", // Warm gray
-        foregroundTertiary: "#a8a29e", // Light warm gray
+/**
+ * Base themes - these define the fixed/semantic colors that don't change with tint.
+ * Most colors are overridden by the selected tint.
+ */
+export const baseThemeColors = {
+  light: {
+    // Semantic colors that stay constant
+    destructive: "#dc2626",
+    destructiveForeground: "#ffffff",
 
-        // Legacy text colors (for backward compatibility during migration)
-        text: "#1c1917",
-        textSecondary: "#78716c",
-        textTertiary: "#a8a29e",
+    // Status colors
+    success: "#10b981",
+    warning: "#f59e0b",
+    error: "#ef4444",
+    info: "#3b82f6",
 
-        // Primary (purple)
-        primary: "#a15b00", // Darker purple for light mode
-        primaryLight: "#c79d66",
-        primaryDark: "#613700",
+    // Fixed UI elements
+    rating: "#fbbf24", // Gold star color
 
-        // Accent (pink)
-        accent: "#db2777", // Darker pink for light mode
-        accentLight: "#ec4899",
+    // Overlays (fixed, don't change with theme)
+    overlay: "#000000",
+    overlayForeground: "#ffffff",
+  },
+  dark: {
+    // Semantic colors that stay constant
+    destructive: "#ef4444",
+    destructiveForeground: "#ffffff",
 
-        // Semantic colors
-        card: "#ffffff",
-        muted: "#f3efe9",
-        mutedForeground: "#78716c",
-        destructive: "#dc2626",
-        destructiveForeground: "#ffffff",
+    // Status colors
+    success: "#10b981",
+    warning: "#f59e0b",
+    error: "#ef4444",
+    info: "#3b82f6",
 
-        // Status colors
-        success: "#10b981",
-        warning: "#f59e0b",
-        error: "#ef4444",
-        info: "#3b82f6",
+    // Fixed UI elements
+    rating: "#fbbf24", // Gold star color
 
-        // UI elements
-        border: "#d8d4cc", // Warm gray border
-        ring: "#7c3aed", // Focus ring (primary color)
-        rating: "#fbbf24", // Gold star color
-
-        // Icon colors (matches foreground)
-        icon: "#1c1917",
-        iconSecondary: "#78716c",
-        iconMuted: "#a8a29e",
-
-        // Overlays (fixed, don't change with theme)
-        overlay: "#000000",
-        overlayForeground: "#ffffff",
-    },
-    dark: {
-        // Backgrounds
-        background: "#131317ff", // Dark blue-black
-        backgroundSecondary: "#2a2a36ff", // Lighter dark blue
-
-        // Foreground (text)
-        foreground: "#ffffff", // White
-        foregroundSecondary: "#9ca3af", // Light gray
-        foregroundTertiary: "#6b7280", // Medium gray
-
-        // Legacy text colors (for backward compatibility during migration)
-        text: "#ffffff",
-        textSecondary: "#9ca3af",
-        textTertiary: "#6b7280",
-
-        // Primary (purple)
-        primary: "#f0ebe3", // Brighter purple for dark mode
-        primaryLight: "#f6f0e7ff",
-        primaryDark: "#dad4cbff",
-
-        // Accent (pink)
-        accent: "#ec4899", // Brighter pink for dark mode
-        accentLight: "#f472b6",
-
-        // Semantic colors
-        card: "#1a1a2e",
-        muted: "#1a1a2e",
-        mutedForeground: "#9ca3af",
-        destructive: "#ef4444",
-        destructiveForeground: "#ffffff",
-
-        // Status colors
-        success: "#10b981",
-        warning: "#f59e0b",
-        error: "#ef4444",
-        info: "#3b82f6",
-
-        // UI elements
-        border: "#374151", // Dark gray border
-        ring: "#8b5cf6", // Focus ring (primary color)
-        rating: "#fbbf24", // Gold star color
-
-        // Icon colors (matches foreground)
-        icon: "#ffffff",
-        iconSecondary: "#9ca3af",
-        iconMuted: "#6b7280",
-
-        // Overlays (fixed, don't change with theme)
-        overlay: "#000000",
-        overlayForeground: "#ffffff",
-    },
+    // Overlays (fixed, don't change with theme)
+    overlay: "#000000",
+    overlayForeground: "#ffffff",
+  },
 };
 
 export type Theme = {
@@ -141,5 +86,23 @@ export type Theme = {
     overlayForeground: string;
 };
 
-export type ThemeKey = keyof typeof themes;
+export type ThemeKey = "light" | "dark";
 export type ColorKey = keyof Theme;
+
+/**
+ * Get theme colors with the selected tint applied.
+ * Merges base theme colors (status, destructive, overlay) with
+ * tint-specific colors (backgrounds, foregrounds, primary, accent, etc.).
+ */
+export function getThemeColors(
+  colorScheme: "light" | "dark",
+  tintName: TintName = DEFAULT_TINT
+): Theme {
+  const baseColors = baseThemeColors[colorScheme];
+  const tintColors = tints[tintName][colorScheme];
+
+  return {
+    ...tintColors,
+    ...baseColors,
+  };
+}

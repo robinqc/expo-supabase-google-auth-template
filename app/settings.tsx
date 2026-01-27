@@ -4,6 +4,7 @@ import { useTheme } from "@/contexts/ThemeContext";
 import { LanguageCode, supportedLanguages } from "@/lib/i18n";
 import { borderRadius, layouts, spacing, useThemedStyles } from "@/lib/styles";
 import { useThemeColors } from "@/lib/theme";
+import { TintName, tintMeta, TINT_NAMES } from "@/lib/tints";
 import { Ionicons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 import { StatusBar } from "expo-status-bar";
@@ -25,9 +26,15 @@ type LanguageOption = {
   icon: keyof typeof Ionicons.glyphMap;
 };
 
+type TintOption = {
+  value: TintName;
+  label: string;
+  swatch: string;
+};
+
 export default function SettingsScreen() {
   const router = useRouter();
-  const { theme, setTheme, isDark } = useTheme();
+  const { theme, setTheme, isDark, tint, setTint } = useTheme();
   const { language, setLanguage } = useLanguage();
   const { t } = useTranslation();
   const colors = useThemeColors();
@@ -67,6 +74,12 @@ export default function SettingsScreen() {
       icon: "language",
     },
   ];
+
+  const TINT_OPTIONS: TintOption[] = TINT_NAMES.map((name) => ({
+    value: name,
+    label: t(`settings.tint${tintMeta[name].label}`),
+    swatch: tintMeta[name].swatch,
+  }));
 
   const styles = useThemedStyles((colors) => ({
     container: {
@@ -143,6 +156,32 @@ export default function SettingsScreen() {
       paddingVertical: spacing.lg,
       alignItems: 'center',
     },
+    tintSection: {
+      marginTop: spacing.lg,
+    },
+    tintLabel: {
+      marginBottom: spacing.sm,
+    },
+    tintContainer: {
+      flexDirection: 'row',
+      justifyContent: 'flex-start',
+      gap: spacing.md,
+      backgroundColor: colors.backgroundSecondary,
+      borderRadius: borderRadius.xl,
+      padding: spacing.md,
+    },
+    tintCircle: {
+      width: 44,
+      height: 44,
+      borderRadius: 22,
+      justifyContent: 'center',
+      alignItems: 'center',
+      borderWidth: 3,
+      borderColor: 'transparent',
+    },
+    tintCircleSelected: {
+      borderColor: colors.foreground,
+    },
   }));
 
   const handleThemeChange = async (newTheme: "light" | "dark" | "system") => {
@@ -151,6 +190,10 @@ export default function SettingsScreen() {
 
   const handleLanguageChange = async (newLanguage: LanguageCode) => {
     await setLanguage(newLanguage);
+  };
+
+  const handleTintChange = async (newTint: TintName) => {
+    await setTint(newTint);
   };
 
   return (
@@ -236,6 +279,37 @@ export default function SettingsScreen() {
                 ? (isDark ? t("settings.usingDarkTheme") : t("settings.usingLightTheme"))
                 : t("settings.appWillUseTheme", { theme })}
             </Text>
+          </View>
+
+          {/* Accent Color / Tint Selection */}
+          <View style={styles.tintSection}>
+            <Text variant="body" weight="medium" style={styles.tintLabel}>
+              {t("settings.accentColor")}
+            </Text>
+            <View style={styles.tintContainer}>
+              {TINT_OPTIONS.map((option) => {
+                const isSelected = tint === option.value;
+                return (
+                  <TouchableOpacity
+                    key={option.value}
+                    onPress={() => handleTintChange(option.value)}
+                    style={[
+                      styles.tintCircle,
+                      { backgroundColor: option.swatch },
+                      isSelected && styles.tintCircleSelected,
+                    ]}
+                    activeOpacity={0.7}
+                    accessibilityLabel={option.label}
+                    accessibilityRole="button"
+                    accessibilityState={{ selected: isSelected }}
+                  >
+                    {isSelected && (
+                      <Ionicons name="checkmark" size={20} color="#ffffff" />
+                    )}
+                  </TouchableOpacity>
+                );
+              })}
+            </View>
           </View>
         </View>
 

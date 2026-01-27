@@ -1,5 +1,6 @@
 import { useTheme } from "@/contexts/ThemeContext";
-import { themes } from "@/lib/themes";
+import { getThemeColors as getThemeColorsFromTint } from "@/lib/themes";
+import { TintName, DEFAULT_TINT } from "@/lib/tints";
 
 /**
  * Hook to get theme-aware colors for use in places where
@@ -16,8 +17,10 @@ export function useThemeColors() {
  * Returns theme colors without hook (for use outside components)
  * 
  * @param isDark - Whether to return dark or light theme colors
+ * @param tintName - Optional tint name (defaults to copper)
  * @returns The requested theme's color palette
  */
-export function getThemeColors(isDark: boolean) {
-  return isDark ? themes.dark : themes.light;
+export function getStaticThemeColors(isDark: boolean, tintName: TintName = DEFAULT_TINT) {
+  const colorScheme = isDark ? "dark" : "light";
+  return getThemeColorsFromTint(colorScheme, tintName);
 }
