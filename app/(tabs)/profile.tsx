@@ -6,6 +6,7 @@ import { useThemeColors } from "@/lib/theme";
 import { router } from "expo-router";
 import { StatusBar } from "expo-status-bar";
 import { useRef, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { ActivityIndicator, Alert, Image, ScrollView, TouchableOpacity, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
@@ -13,6 +14,7 @@ export default function ProfileScreen() {
     const { user, userProfile, loading, signOut } = useAuth();
     const { isDark } = useTheme();
     const colors = useThemeColors();
+    const { t } = useTranslation();
 
     const passwordInput = useRef<any>(null);
 
@@ -104,16 +106,16 @@ export default function ProfileScreen() {
 
     const handleSignIn = async () => {
         if (!email || !password) {
-            Alert.alert("Error", "Please fill in all fields");
+            Alert.alert(t("common.error"), t("profile.fillAllFields"));
             return;
         }
 
         setSignInLoading(true);
         try {
             // This is a placeholder - you'd call the actual sign in function
-            Alert.alert("Sign In", "Sign in functionality would be implemented here");
+            Alert.alert(t("profile.signIn"), t("profile.signInMessage"));
         } catch (error) {
-            Alert.alert("Error", "Failed to sign in");
+            Alert.alert(t("common.error"), t("profile.signInFailed"));
         } finally {
             setSignInLoading(false);
         }
@@ -143,15 +145,15 @@ export default function ProfileScreen() {
                         </View>
 
                         <Text variant="title" style={styles.nameText}>
-                            Not Signed In
+                            {t("profile.notSignedIn")}
                         </Text>
                         <Text variant="body" color="secondary" style={styles.emailText}>
-                            Sign in to access your profile
+                            {t("profile.signInPrompt")}
                         </Text>
 
                         <View style={styles.buttonContainer}>
                             <Button onPress={() => router.push("/sign-in")} variant="primary" size="lg">
-                                Sign In
+                                {t("profile.signIn")}
                             </Button>
                         </View>
                     </View>
@@ -178,7 +180,7 @@ export default function ProfileScreen() {
                     </View>
 
                     <Text variant="title" style={styles.nameText}>
-                        {userProfile?.name || user?.email || "User"}
+                        {userProfile?.name || user?.email || t("profile.user")}
                     </Text>
 
                     {userProfile?.bio && (
@@ -189,12 +191,12 @@ export default function ProfileScreen() {
 
                     <View style={styles.buttonContainer}>
                         <Button onPress={() => router.push("/settings")} variant="secondary" icon="settings-outline" size="md">
-                            Settings
+                            {t("profile.settings")}
                         </Button>
                     </View>
 
                     <TouchableOpacity style={styles.signOutButton} onPress={signOut}>
-                        <Text style={styles.signOutButtonText}>Sign Out</Text>
+                        <Text style={styles.signOutButtonText}>{t("profile.signOut")}</Text>
                     </TouchableOpacity>
                 </View>
             </ScrollView>

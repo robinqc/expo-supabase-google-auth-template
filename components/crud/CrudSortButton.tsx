@@ -4,6 +4,7 @@ import { useTheme } from "@/contexts/ThemeContext";
 import { borderRadius, spacing, useThemedStyles } from "@/lib/styles";
 import { SortOption, SortableColumn } from "@/types/crud";
 import React, { useState } from "react";
+import { useTranslation } from "react-i18next";
 import { Pressable, TouchableOpacity, View } from "react-native";
 
 interface CrudSortButtonProps {
@@ -14,6 +15,7 @@ interface CrudSortButtonProps {
 
 export function CrudSortButton({ value, onChange, sortableColumns = [] }: CrudSortButtonProps) {
     const { colors } = useTheme();
+    const { t } = useTranslation();
     const [isVisible, setIsVisible] = useState(false);
     const styles = useThemedStyles((colors) => ({
         modalOverlay: {
@@ -47,7 +49,7 @@ export function CrudSortButton({ value, onChange, sortableColumns = [] }: CrudSo
         },
     }));
 
-    const sortOptions = [{ id: "newest", label: "Newest" }, { id: "oldest", label: "Oldest" }, { id: "alphabetical", label: "A-Z" }, ...sortableColumns];
+    const sortOptions = [{ id: "newest", label: t("crud.newest") }, { id: "oldest", label: t("crud.oldest") }, { id: "alphabetical", label: t("crud.alphabetical") }, ...sortableColumns];
 
     const currentOption = sortOptions.find((opt) => opt.id === value) || sortOptions[0];
 

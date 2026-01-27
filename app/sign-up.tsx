@@ -3,6 +3,7 @@ import { useAuth } from "@/contexts/AuthContext";
 import { spacing, useThemedStyles } from "@/lib/styles";
 import { router } from "expo-router";
 import { useCallback, useRef, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { Keyboard, KeyboardAvoidingView, Platform, ScrollView, TextInput, TouchableWithoutFeedback, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import Toast from "react-native-toast-message";
@@ -28,9 +29,22 @@ type SignUpForm = z.infer<typeof signUpSchema>;
 
 export default function SignUp() {
     const { signUp } = useAuth();
+    const { t } = useTranslation();
     const [loading, setLoading] = useState(false);
     const passwordInput = useRef<TextInput>(null);
     const confirmPasswordInput = useRef<TextInput>(null);
+
+    const signUpSchema = z
+        .object({
+            name: z.string().min(3, t("auth.nameMinLength")),
+            email: z.string().email(t("auth.invalidEmailAddress")),
+            password: z.string().min(6, t("auth.passwordMinLength")),
+            confirmPassword: z.string().min(6, t("auth.passwordMinLength")),
+        })
+        .refine((data) => data.password === data.confirmPassword, {
+            message: t("auth.passwordsDoNotMatch"),
+            path: ["confirmPassword"],
+        });
 
     const {
         control,
@@ -112,8 +126,8 @@ export default function SignUp() {
                 await signUp(data.email, data.password);
                 Toast.show({
                     type: "success",
-                    text1: "Account Created",
-                    text2: "Please check your email to verify your account",
+                    text1: t("auth.accountCreated"),
+                    text2: t("auth.checkEmailToVerify"),
                     position: "bottom",
                 });
                 router.replace("/sign-in");
@@ -126,15 +140,15 @@ export default function SignUp() {
                 }
                 Toast.show({
                     type: "error",
-                    text1: "Sign Up Failed",
-                    text2: error.message || "An error occurred",
+                    text1: t("auth.signUpFailed"),
+                    text2: error.message || t("auth.anErrorOccurred"),
                     position: "bottom",
                 });
             } finally {
                 setLoading(false);
             }
         },
-        [signUp],
+        [signUp, t],
     );
 
     const onSignIn = () => {
@@ -154,24 +168,24 @@ export default function SignUp() {
                             </View>
 
                             <Text variant="heading" style={styles.title}>
-                                Create Account
+                                {t("auth.createAccount")}
                             </Text>
                             <Text variant="body" color="secondary" style={styles.description}>
-                                Join us and get started with your new account
+                                {t("auth.createAccountSubtitle")}
                             </Text>
 
                             <View style={styles.formContainer}>
                                 <Input
-                                    placeholder="Name"
+                                    placeholder={t("auth.name")}
                                     control={control}
                                     name="name"
                                     autoCapitalize="words"
                                     returnKeyType="next"
                                     onSubmitEditing={() => passwordInput.current?.focus()}
-                                    label="Name"
+                                    label={t("auth.name")}
                                 />
                                 <Input
-                                    placeholder="Email"
+                                    placeholder={t("auth.email")}
                                     control={control}
                                     name="email"
                                     keyboardType="email-address"
@@ -180,40 +194,40 @@ export default function SignUp() {
                                     textContentType="emailAddress"
                                     returnKeyType="next"
                                     onSubmitEditing={() => passwordInput.current?.focus()}
-                                    label="Email"
+                                    label={t("auth.email")}
                                 />
                                 <PasswordInput
-                                    placeholder="Password"
+                                    placeholder={t("auth.password")}
                                     control={control}
                                     name="password"
                                     returnKeyType="next"
                                     onSubmitEditing={() => confirmPasswordInput.current?.focus()}
                                     ref={passwordInput}
-                                    label="Password"
+                                    label={t("auth.password")}
                                 />
                                 <PasswordInput
-                                    placeholder="Confirm Password"
+                                    placeholder={t("auth.confirmPassword")}
                                     control={control}
                                     name="confirmPassword"
                                     returnKeyType="done"
                                     onSubmitEditing={handleSubmit(onSubmit)}
                                     ref={confirmPasswordInput}
-                                    label="Confirm Password"
+                                    label={t("auth.confirmPassword")}
                                 />
                             </View>
 
                             <View style={styles.buttonContainer}>
                                 <Button onPress={handleSubmit(onSubmit)} variant="primary" size="md" loading={loading} style={{ flex: 1 }}>
-                                    Create Account
+                                    {t("auth.createAccount")}
                                 </Button>
                             </View>
 
                             <View style={styles.signInButton}>
                                 <Text color="secondary" style={styles.signInText}>
-                                    Already have an account?
+                                    {t("auth.haveAccount")}
                                 </Text>
                                 <Button onPress={onSignIn} variant="ghost">
-                                    Sign In
+                                    {t("auth.signIn")}
                                 </Button>
                             </View>
                         </View>

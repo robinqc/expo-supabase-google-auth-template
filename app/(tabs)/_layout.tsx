@@ -2,10 +2,12 @@ import { useAuth } from "@/contexts/AuthContext";
 import { useTheme } from "@/contexts/ThemeContext";
 import { Ionicons } from "@expo/vector-icons";
 import { Tabs } from "expo-router";
+import { useTranslation } from "react-i18next";
 
 export default function TabLayout() {
     const { isDark, colors } = useTheme();
     const { user } = useAuth();
+    const { t } = useTranslation();
 
     return (
         <Tabs
@@ -32,21 +34,21 @@ export default function TabLayout() {
             <Tabs.Screen
                 name="index"
                 options={{
-                    title: "Home",
+                    title: t("tabs.home"),
                     tabBarIcon: ({ color, size }) => <Ionicons name="home-outline" size={20} color={color} />,
                 }}
             />
             <Tabs.Screen
                 name="crud"
                 options={{
-                    title: "CRUD",
+                    title: t("tabs.crud"),
                     tabBarIcon: ({ color, size }) => <Ionicons name="add-circle-outline" size={20} color={color} />,
                 }}
             />
             <Tabs.Screen
                 name="profile"
                 options={{
-                    title: "Profile",
+                    title: t("tabs.profile"),
                     tabBarIcon: ({ color, size }) => <Ionicons name="person-circle-outline" size={20} color={color} />,
                 }}
             />

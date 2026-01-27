@@ -5,6 +5,7 @@ import { useThemeColors } from "@/lib/theme";
 import { Ionicons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 import { StatusBar } from "expo-status-bar";
+import { useTranslation } from "react-i18next";
 import { ScrollView, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
@@ -12,6 +13,7 @@ export default function HomeScreen() {
     const router = useRouter();
     const { isDark } = useTheme();
     const colors = useThemeColors();
+    const { t } = useTranslation();
 
     const styles = useThemedStyles((colors) => ({
         container: {
@@ -92,53 +94,53 @@ export default function HomeScreen() {
                     <View style={styles.content}>
                         <View style={styles.welcomeSection}>
                             <Text variant="heading" style={styles.appName}>
-                                Expo Supabase Starter
+                                {t("home.title")}
                             </Text>
                             <Text variant="body" color="secondary" style={styles.description}>
-                                A complete starter template for React Native apps with Expo, Supabase authentication, and beautiful theming.
+                                {t("home.description")}
                             </Text>
                         </View>
 
                         <View style={styles.card}>
                             <Text variant="title" style={styles.cardTitle}>
-                                🚀 Ready to Build
+                                {t("home.readyToBuild")}
                             </Text>
                             <Text variant="body" color="secondary" style={styles.cardDescription}>
-                                This template includes everything you need to get started with authentication, navigation, and a polished UI.
+                                {t("home.readyDescription")}
                             </Text>
 
                             <View style={styles.buttonContainer}>
                                 <Button onPress={() => router.push("/sign-in")} variant="primary" size="lg" style={{ flex: 1 }}>
-                                    Get Started
+                                    {t("home.getStarted")}
                                 </Button>
                             </View>
                         </View>
 
                         <View style={styles.featuresSection}>
                             <Text variant="title" style={styles.cardTitle}>
-                                ✨ Features Included
+                                {t("home.featuresTitle")}
                             </Text>
 
                             <View style={styles.featureItem}>
                                 <Ionicons name="lock-closed" size={24} color={colors.primary} style={styles.featureIcon} />
                                 <Text variant="body" textBreakStrategy="simple">
-                                    Email & Google authentication with Supabase
+                                    {t("home.featureAuth")}
                                 </Text>
                             </View>
 
                             <View style={styles.featureItem}>
                                 <Ionicons name="color-palette" size={24} color={colors.primary} style={styles.featureIcon} />
-                                <Text variant="body">Light/dark/system theme with persistence</Text>
+                                <Text variant="body">{t("home.featureTheme")}</Text>
                             </View>
 
                             <View style={styles.featureItem}>
                                 <Ionicons name="layers" size={24} color={colors.primary} style={styles.featureIcon} />
-                                <Text variant="body">Reusable UI components and layouts</Text>
+                                <Text variant="body">{t("home.featureUI")}</Text>
                             </View>
 
                             <View style={styles.featureItem}>
                                 <Ionicons name="code" size={24} color={colors.primary} style={styles.featureIcon} />
-                                <Text variant="body">TypeScript with strict mode enabled</Text>
+                                <Text variant="body">{t("home.featureTS")}</Text>
                             </View>
                         </View>
 

@@ -7,6 +7,7 @@ import { router } from "expo-router";
 import { StatusBar } from "expo-status-bar";
 import { useRef, useState } from "react";
 import { useForm } from "react-hook-form";
+import { useTranslation } from "react-i18next";
 import { Keyboard, KeyboardAvoidingView, Platform, ScrollView, TextInput, TouchableWithoutFeedback, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import Toast from "react-native-toast-message";
@@ -21,9 +22,16 @@ type LoginFormData = z.infer<typeof loginSchema>;
 
 export default function SignIn() {
     const { signIn, signInWithGoogle } = useAuth();
+    const { t } = useTranslation();
     const [loading, setLoading] = useState(false);
     const passwordInput = useRef<TextInput>(null);
     const [globalError, setGlobalError] = useState<string | null>(null);
+
+    const loginSchema = z.object({
+        email: z.string().min(1, t("auth.emailRequired")).email(t("auth.invalidEmail")),
+        password: z.string().min(6, t("auth.passwordMinLength")),
+    });
+
     const {
         control,
         handleSubmit,
@@ -106,19 +114,19 @@ export default function SignIn() {
         } catch (error: any) {
             if (error instanceof AuthApiError) {
                 if (error.message === "Invalid login credentials") {
-                    setGlobalError("Invalid email or password");
+                    setGlobalError(t("auth.invalidCredentials"));
                 }
                 if (error.message === "Email not confirmed") {
                     setError("email", {
                         type: "manual",
-                        message: "Email not confirmed",
+                        message: t("auth.emailNotConfirmed"),
                     });
                 }
             }
             Toast.show({
                 type: "error",
-                text1: "Sign In Failed",
-                text2: error.message || "An error occurred",
+                text1: t("auth.signInFailed"),
+                text2: error.message || t("auth.anErrorOccurred"),
                 position: "bottom",
             });
         } finally {
@@ -132,8 +140,8 @@ export default function SignIn() {
         } catch (error: any) {
             Toast.show({
                 type: "error",
-                text1: "Google Sign In Failed",
-                text2: error.message || "An error occurred",
+                text1: t("auth.googleSignInFailed"),
+                text2: error.message || t("auth.anErrorOccurred"),
                 position: "bottom",
             });
         }
@@ -157,15 +165,15 @@ export default function SignIn() {
                             </View>
 
                             <Text variant="heading" style={styles.title}>
-                                Welcome Back
+                                {t("auth.welcomeBack")}
                             </Text>
                             <Text variant="body" color="secondary" style={styles.description}>
-                                Sign in to your account to continue
+                                {t("auth.signInSubtitle")}
                             </Text>
 
                             <View style={styles.formContainer}>
                                 <Input
-                                    placeholder="example@gmail.com"
+                                    placeholder={t("auth.emailPlaceholder")}
                                     control={control}
                                     name="email"
                                     keyboardType="email-address"
@@ -174,17 +182,17 @@ export default function SignIn() {
                                     textContentType="emailAddress"
                                     returnKeyType="next"
                                     onSubmitEditing={() => passwordInput.current?.focus()}
-                                    label="Email"
+                                    label={t("auth.email")}
                                 />
                                 <PasswordInput
-                                    placeholder="Password"
+                                    placeholder={t("auth.password")}
                                     control={control}
                                     name="password"
                                     returnKeyType="done"
                                     onSubmitEditing={handleSubmit(onSubmit)}
                                     autoCapitalize="none"
                                     ref={passwordInput}
-                                    label="Password"
+                                    label={t("auth.password")}
                                     error={errors.password?.message}
                                 />
                             </View>
@@ -196,22 +204,22 @@ export default function SignIn() {
                             )}
                             <View style={[styles.buttonContainer, { marginTop: spacing.lg }]}>
                                 <Button onPress={handleSubmit(onSubmit)} variant="primary" size="md" loading={loading} style={{ flex: 1 }}>
-                                    Sign In
+                                    {t("auth.signIn")}
                                 </Button>
 
                                 {GOOGLE_AUTH_ENABLED && (
                                     <Button onPress={onGoogleSignIn} variant="secondary" icon="logo-google" size="lg" style={{ flex: 1 }}>
-                                        Sign in with Google
+                                        {t("auth.signInWithGoogle")}
                                     </Button>
                                 )}
                             </View>
 
                             <View style={styles.signUpButton}>
                                 <Text color="secondary" style={styles.signUpText}>
-                                    Don't have an account?
+                                    {t("auth.noAccount")}
                                 </Text>
                                 <Button onPress={onSignUp} variant="ghost">
-                                    Sign Up
+                                    {t("auth.signUp")}
                                 </Button>
                             </View>
                         </View>

@@ -13,6 +13,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { StatusBar } from 'expo-status-bar';
 import { router, useLocalSearchParams } from 'expo-router';
 import React, { useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { ActivityIndicator, Alert, Pressable, ScrollView, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import Animated, { FadeIn } from 'react-native-reanimated';
@@ -20,6 +21,7 @@ import Animated, { FadeIn } from 'react-native-reanimated';
 export default function CrudDetailPage() {
   const { user } = useAuth();
   const { isDark, colors } = useTheme();
+  const { t } = useTranslation();
   const params = useLocalSearchParams<{ id: string }>();
   const [item, setItem] = useState<CrudItem | null>(null);
   const [loading, setLoading] = useState(true);
@@ -133,12 +135,12 @@ export default function CrudDetailPage() {
         if (data) {
           setItem(data);
         } else {
-          showToast.error('Item not found');
+          showToast.error(t('crud.itemNotFound'));
           router.back();
         }
       } catch (error) {
         console.error('Error loading item:', error);
-        showToast.error('Failed to load item');
+        showToast.error(t('crud.loadFailed'));
         router.back();
       } finally {
         setLoading(false);
@@ -160,20 +162,20 @@ export default function CrudDetailPage() {
     if (!item || !user?.id) return;
 
     Alert.alert(
-      'Delete Item',
-      'Are you sure you want to delete this item?',
+      t('crud.deleteItem'),
+      t('crud.deleteConfirmation'),
       [
-        { text: 'Cancel', style: 'cancel' },
+        { text: t('common.cancel'), style: 'cancel' },
         {
-          text: 'Delete',
+          text: t('common.delete'),
           style: 'destructive',
           onPress: async () => {
             try {
               await deleteCrudItem(item.id, user.id);
-              showToast.success('Item deleted');
+              showToast.success(t('crud.itemDeleted'));
               router.back();
             } catch (error) {
-              showToast.error('Failed to delete item');
+              showToast.error(t('crud.deleteFailed'));
               console.error('Error deleting item:', error);
             }
           },
@@ -263,22 +265,22 @@ export default function CrudDetailPage() {
           {/* Description */}
           {item.description && (
             <View style={styles.section}>
-              <Text style={styles.sectionTitle}>Description</Text>
+              <Text style={styles.sectionTitle}>{t('crud.descriptionLabel')}</Text>
               <Text style={styles.description}>{item.description}</Text>
             </View>
           )}
 
           {/* Details */}
           <View style={styles.section}>
-            <Text style={styles.sectionTitle}>Details</Text>
+            <Text style={styles.sectionTitle}>{t('crud.details')}</Text>
             <Card variant="outlined" padding="md" style={styles.detailsCard}>
               <DetailRow
-                label="Category"
+                label={t('crud.category')}
                 value={item.category}
                 icon="pricetag-outline"
               />
               <DetailRow
-                label="ID"
+                label={t('crud.id')}
                 value={`#${item.id.substring(0, 8)}`}
                 showDivider={false}
               />
@@ -295,7 +297,7 @@ export default function CrudDetailPage() {
           onPress={handleEdit}
           style={styles.actionButton}
         >
-          Edit
+          {t('common.edit')}
         </Button>
         <Button
           variant="destructive"
@@ -303,7 +305,7 @@ export default function CrudDetailPage() {
           onPress={handleDelete}
           style={styles.actionButton}
         >
-          Delete
+          {t('common.delete')}
         </Button>
       </View>
     </SafeAreaView>

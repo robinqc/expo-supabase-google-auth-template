@@ -3,6 +3,7 @@ import * as Crypto from "expo-crypto";
 import * as WebBrowser from "expo-web-browser";
 import { router } from "expo-router";
 import React, { createContext, useContext, useEffect, useState } from "react";
+import i18n from "../lib/i18n";
 import { getUserProfile, supabase, UserProfile } from "../lib/supabase";
 
 // Configure WebBrowser for OAuth
@@ -80,7 +81,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
             console.log("Starting Google Sign In...");
 
             if (!GOOGLE_AUTH_ENABLED) {
-                throw new Error("Google Sign-In is not enabled");
+                throw new Error(i18n.t("auth.googleSignInNotEnabled"));
             }
 
             // Use Supabase OAuth with Google
@@ -111,7 +112,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
                     // User completed authentication, session should be set automatically
                     router.replace("/(tabs)");
                 } else {
-                    throw new Error("Authentication was cancelled");
+                    throw new Error(i18n.t("auth.authCancelled"));
                 }
             }
         } catch (error: any) {

@@ -11,12 +11,14 @@ import { CrudFilters, CrudItem, SortOption, TableColumn, ViewMode } from "@/type
 import { router } from "expo-router";
 import { StatusBar } from "expo-status-bar";
 import React, { useState } from "react";
+import { useTranslation } from "react-i18next";
 import { Alert, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function CrudScreen() {
     const { user } = useAuth();
     const { isDark, colors } = useTheme();
+    const { t } = useTranslation();
     const [viewMode, setViewMode] = useState<ViewMode>("list");
     const [sortOption, setSortOption] = useState<SortOption>("newest");
     const [filters, setFilters] = useState<CrudFilters>({});
@@ -40,19 +42,19 @@ export default function CrudScreen() {
     });
 
     const handleDelete = async (item: any) => {
-        Alert.alert("Delete Item", "Are you sure you want to delete this item?", [
-            { text: "Cancel", style: "cancel" },
+        Alert.alert(t("crud.deleteItem"), t("crud.deleteConfirmation"), [
+            { text: t("common.cancel"), style: "cancel" },
             {
-                text: "Delete",
+                text: t("common.delete"),
                 style: "destructive",
                 onPress: async () => {
                     try {
                         if (!user?.id) return;
                         await deleteCrudItem(item.id, user.id);
-                        showToast.success("Item deleted");
+                        showToast.success(t("crud.itemDeleted"));
                         refresh();
                     } catch (error) {
-                        showToast.error("Failed to delete item");
+                        showToast.error(t("crud.deleteFailed"));
                         console.error("Error deleting item:", error);
                     }
                 },
@@ -62,16 +64,16 @@ export default function CrudScreen() {
 
     const handleFilterPress = () => {
         // TODO: Implement filter modal/bottom sheet
-        showToast.info("Filter feature coming soon");
+        showToast.info(t("crud.filterComingSoon"));
     };
 
-    const sortableColumns = [{ id: "price", label: "Price", column: "price" }];
+    const sortableColumns = [{ id: "price", label: t("crud.price"), column: "price" }];
 
     // Table columns configuration
     const tableColumns: TableColumn<CrudItem>[] = [
         {
             id: "product",
-            label: "PRODUCT",
+            label: t("crud.product"),
             accessor: (item) => (
                 <View style={{ gap: 4 }}>
                     <Text style={{ color: colors.foreground, fontSize: 14, fontWeight: "600" }}>{item.title}</Text>
@@ -82,13 +84,13 @@ export default function CrudScreen() {
         },
         {
             id: "category",
-            label: "CATEGORY",
+            label: t("crud.category"),
             accessor: "category",
             width: 140,
         },
         {
             id: "status",
-            label: "STATUS",
+            label: t("crud.status"),
             accessor: (item) => (
                 <View
                     style={{
@@ -100,7 +102,7 @@ export default function CrudScreen() {
                     }}
                 >
                     <Text style={{ color: item.status === "active" ? colors.success : colors.foregroundSecondary, fontSize: 11, fontWeight: "600", textTransform: "uppercase" }}>
-                        {item.status}
+                        {t(`status.${item.status}`)}
                     </Text>
                 </View>
             ),
@@ -109,13 +111,13 @@ export default function CrudScreen() {
         },
         {
             id: "subtitle",
-            label: "DESCRIPTION",
+            label: t("crud.description"),
             accessor: (item) => <Text style={{ color: colors.foregroundSecondary, fontSize: 13 }}>{item.subtitle || "-"}</Text>,
             width: 200,
         },
         {
             id: "actions",
-            label: "ACTIONS",
+            label: t("crud.actions"),
             accessor: (item) => (
                 <View style={{ flexDirection: "row", gap: 8, justifyContent: "center" }}>
                     <Button
@@ -150,10 +152,10 @@ export default function CrudScreen() {
             {/* Header */}
             <View style={styles.header}>
                 <Text variant="heading" weight="extrabold">
-                    CRUD
+                    {t("crud.title")}
                 </Text>
                 <Button size="sm" icon="add" onPress={() => router.push("/crud/create" as any)}>
-                    New
+                    {t("common.new")}
                 </Button>
             </View>
 
@@ -177,13 +179,13 @@ export default function CrudScreen() {
                 onLoadMore={loadMore}
                 hasMore={hasMore}
                 onItemDelete={handleDelete}
-                emptyMessage="No items found"
+                emptyMessage={t("crud.noItemsFound")}
                 sortableColumns={sortableColumns}
                 columns={tableColumns}
                 stickyColumn={{ position: "left", columnId: "product" }}
                 emptyAction={
                     <Button variant="primary" onPress={() => router.push("/crud/create" as any)}>
-                        Create your first item
+                        {t("crud.createFirstItem")}
                     </Button>
                 }
             />
