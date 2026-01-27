@@ -2,11 +2,10 @@ import { Text } from "@/components/ui/Text";
 import { useTheme } from "@/contexts/ThemeContext";
 import { spacing, useThemedStyles } from "@/lib/styles";
 import { CrudItem as CrudItemType, SortableColumn, StickyColumnConfig, TableColumn, ViewMode } from "@/types/crud";
+import { StickyTable } from "@robin-ux/react-native-sticky-table";
 import React from "react";
 import { ActivityIndicator, FlatList, RefreshControl, View } from "react-native";
 import { CrudItem } from "./CrudItem";
-import { CrudTable } from "./CrudTableNG";
-
 interface CrudListProps<T = CrudItemType> {
     items: T[];
     viewMode: ViewMode;
@@ -39,11 +38,14 @@ export function CrudList<T extends CrudItemType = CrudItemType>({
     renderItem,
     emptyMessage = "No items found",
     emptyAction,
-    keyExtractor = (item) => item.id,
+    keyExtractor: keyExtractorProp,
     columns,
     stickyColumn,
 }: CrudListProps<T>) {
     const { colors } = useTheme();
+
+    // Use prop if provided, default handled by components
+    const keyExtractor = keyExtractorProp;
 
     const styles = useThemedStyles((colors) => ({
         container: {
@@ -124,7 +126,7 @@ export function CrudList<T extends CrudItemType = CrudItemType>({
         }
 
         return (
-            <CrudTable
+            <StickyTable
                 items={items}
                 columns={columns}
                 theme={colors}
