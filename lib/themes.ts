@@ -20,9 +20,9 @@ export const themes = {
         textTertiary: "#a8a29e",
 
         // Primary (purple)
-        primary: "#1c1917", // Darker purple for light mode
-        primaryLight: "#eca22bff",
-        primaryDark: "#2d2723ff",
+        primary: "#a15b00", // Darker purple for light mode
+        primaryLight: "#c79d66",
+        primaryDark: "#613700",
 
         // Accent (pink)
         accent: "#db2777", // Darker pink for light mode
@@ -30,7 +30,7 @@ export const themes = {
 
         // Semantic colors
         card: "#ffffff",
-        muted: "#f0ebe3",
+        muted: "#f3efe9",
         mutedForeground: "#78716c",
         destructive: "#dc2626",
         destructiveForeground: "#ffffff",
@@ -42,7 +42,7 @@ export const themes = {
         info: "#3b82f6",
 
         // UI elements
-        border: "#e7e5e4", // Warm gray border
+        border: "#d8d4cc", // Warm gray border
         ring: "#7c3aed", // Focus ring (primary color)
         rating: "#fbbf24", // Gold star color
 

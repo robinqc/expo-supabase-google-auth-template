@@ -38,7 +38,7 @@ export function SegmentedControl({ segments, value, onChange, size = "md", style
             flexDirection: "row",
         },
         activeSegment: {
-            backgroundColor: colors.foreground,
+            backgroundColor: colors.primaryDark,
         },
         segmentText: {
             color: colors.foregroundSecondary,

@@ -50,7 +50,7 @@ export function Button({ variant = "primary", size = "md", loading = false, disa
     // Variant styles
     const variantStyles = {
         primary: {
-            backgroundColor: isDisabled ? colors.foregroundSecondary : colors.foreground,
+            backgroundColor: isDisabled ? colors.primaryLight : colors.primary,
             textColor: colors.background,
         },
         secondary: {

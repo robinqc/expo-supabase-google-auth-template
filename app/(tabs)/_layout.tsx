@@ -17,17 +17,12 @@ export default function TabLayout() {
                 tabBarActiveTintColor: colors.foreground,
                 tabBarInactiveTintColor: colors.foregroundTertiary,
                 tabBarStyle: {
-                    position: "absolute",
                     display: "flex",
                     flexDirection: "row",
                     backgroundColor: colors.backgroundSecondary,
                     borderWidth: 1,
                     borderColor: isDark ? "rgba(255, 255, 255, 0.1)" : "rgba(255, 255, 255, 0.8)",
-                    borderRadius: 30,
-                    height: 60,
-                    paddingTop: 5,
-                    bottom: 20,
-                    marginHorizontal: 15,
+                    paddingVertical: 20,
                 },
             }}
         >
