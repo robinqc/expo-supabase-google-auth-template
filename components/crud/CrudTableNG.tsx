@@ -4,15 +4,7 @@ import { spacing, useThemedStyles } from "@/lib/styles";
 import { CrudItem as CrudItemType, StickyColumnConfig, TableColumn } from "@/types/crud";
 import _ from "lodash";
 import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import {
-    ActivityIndicator,
-    Animated,
-    FlatList,
-    RefreshControl,
-    ScrollView,
-    TouchableOpacity,
-    View,
-} from "react-native";
+import { ActivityIndicator, Animated, FlatList, RefreshControl, ScrollView, TouchableOpacity, View } from "react-native";
 
 // Create AnimatedFlatList for native-driven scroll events
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -65,10 +57,19 @@ export function CrudTable<T extends CrudItemType = CrudItemType>({
     const [selectedColumn, setSelectedColumn] = useState<string | null>(null);
     const [tableData, setTableData] = useState<T[]>([]);
 
-    // Update table data when items change
     useEffect(() => {
-        setTableData(items);
-    }, [items]);
+        // Deduplicate items by id to prevent duplicate key errors
+        const seen = new Set<string>();
+        const deduped = items.filter((item) => {
+            const key = keyExtractor(item);
+            if (seen.has(key)) {
+                return false;
+            }
+            seen.add(key);
+            return true;
+        });
+        setTableData(deduped);
+    }, [items, keyExtractor]);
 
     // Determine fixed and scrollable columns
     const fixedColumn = useMemo(() => {
@@ -159,8 +160,8 @@ export function CrudTable<T extends CrudItemType = CrudItemType>({
             borderRightColor: colors.border,
         },
         headerText: {
-            color: colors.foregroundSecondary,
-            fontSize: 11,
+            color: colors.foreground,
+            fontSize: 12,
             fontWeight: "700",
             textTransform: "uppercase",
             letterSpacing: 0.5,
@@ -245,19 +246,10 @@ export function CrudTable<T extends CrudItemType = CrudItemType>({
                 {scrollableColumns.map((column) => {
                     const width = column.width ?? column.minWidth ?? DEFAULT_COLUMN_WIDTH;
                     return (
-                        <TouchableOpacity
-                            key={column.id}
-                            style={[styles.headerCell, { width }]}
-                            onPress={() => sortTable(column)}
-                            activeOpacity={0.7}
-                        >
+                        <TouchableOpacity key={column.id} style={[styles.headerCell, { width }]} onPress={() => sortTable(column)} activeOpacity={0.7}>
                             <View style={{ flexDirection: "row", alignItems: "center" }}>
                                 <Text
-                                    style={[
-                                        styles.headerText,
-                                        column.align === "center" && { textAlign: "center" },
-                                        column.align === "right" && { textAlign: "right" },
-                                    ]}
+                                    style={[styles.headerText, column.align === "center" && { textAlign: "center" }, column.align === "right" && { textAlign: "right" }]}
                                     numberOfLines={1}
                                 >
                                     {column.label}
@@ -275,12 +267,7 @@ export function CrudTable<T extends CrudItemType = CrudItemType>({
     const renderScrollableRow = useCallback(
         ({ item }: { item: T }) => {
             return (
-                <TouchableOpacity
-                    style={styles.dataRow}
-                    onPress={() => onItemPress?.(item)}
-                    activeOpacity={onItemPress ? 0.7 : 1}
-                    disabled={!onItemPress}
-                >
+                <TouchableOpacity style={styles.dataRow} onPress={() => onItemPress?.(item)} activeOpacity={onItemPress ? 0.7 : 1} disabled={!onItemPress}>
                     {scrollableColumns.map((column) => {
                         const width = column.width ?? column.minWidth ?? DEFAULT_COLUMN_WIDTH;
 
@@ -291,11 +278,7 @@ export function CrudTable<T extends CrudItemType = CrudItemType>({
                             const value = item[column.accessor as keyof T];
                             content = (
                                 <Text
-                                    style={[
-                                        styles.cellText,
-                                        column.align === "center" && { textAlign: "center" },
-                                        column.align === "right" && { textAlign: "right" },
-                                    ]}
+                                    style={[styles.cellText, column.align === "center" && { textAlign: "center" }, column.align === "right" && { textAlign: "right" }]}
                                     numberOfLines={2}
                                 >
                                     {String(value ?? "")}
@@ -320,18 +303,10 @@ export function CrudTable<T extends CrudItemType = CrudItemType>({
         if (!fixedColumn) return null;
 
         return (
-            <TouchableOpacity
-                style={[styles.fixedHeaderCell, { width: fixedColumnWidth }]}
-                onPress={() => sortTable(fixedColumn)}
-                activeOpacity={0.7}
-            >
+            <TouchableOpacity style={[styles.fixedHeaderCell, { width: fixedColumnWidth }]} onPress={() => sortTable(fixedColumn)} activeOpacity={0.7}>
                 <View style={{ flexDirection: "row", alignItems: "center" }}>
                     <Text
-                        style={[
-                            styles.headerText,
-                            fixedColumn.align === "center" && { textAlign: "center" },
-                            fixedColumn.align === "right" && { textAlign: "right" },
-                        ]}
+                        style={[styles.headerText, fixedColumn.align === "center" && { textAlign: "center" }, fixedColumn.align === "right" && { textAlign: "right" }]}
                         numberOfLines={1}
                     >
                         {fixedColumn.label}
@@ -354,11 +329,7 @@ export function CrudTable<T extends CrudItemType = CrudItemType>({
                 const value = item[fixedColumn.accessor as keyof T];
                 content = (
                     <Text
-                        style={[
-                            styles.cellText,
-                            fixedColumn.align === "center" && { textAlign: "center" },
-                            fixedColumn.align === "right" && { textAlign: "right" },
-                        ]}
+                        style={[styles.cellText, fixedColumn.align === "center" && { textAlign: "center" }, fixedColumn.align === "right" && { textAlign: "right" }]}
                         numberOfLines={2}
                     >
                         {String(value ?? "")}
@@ -400,10 +371,7 @@ export function CrudTable<T extends CrudItemType = CrudItemType>({
     }, [hasMore, colors.foreground, styles.footer]);
 
     // Native-driven scroll handler for syncing fixed column
-    const handleScroll = Animated.event(
-        [{ nativeEvent: { contentOffset: { y: scrollY } } }],
-        { useNativeDriver: true }
-    );
+    const handleScroll = Animated.event([{ nativeEvent: { contentOffset: { y: scrollY } } }], { useNativeDriver: true });
 
     // Early return for initial loading with no data
     if (loading && tableData.length === 0) {
@@ -425,7 +393,7 @@ export function CrudTable<T extends CrudItemType = CrudItemType>({
                 {/* Vertical FlatList with sticky header */}
                 <AnimatedFlatList
                     data={tableData}
-                    keyExtractor={keyExtractor}
+                    keyExtractor={(item: T, index: number) => `row-${keyExtractor(item)}-${index}`}
                     ListHeaderComponent={renderScrollableHeader}
                     stickyHeaderIndices={[0]}
                     renderItem={renderScrollableRow}
@@ -434,14 +402,7 @@ export function CrudTable<T extends CrudItemType = CrudItemType>({
                     onEndReached={hasMore ? onLoadMore : undefined}
                     onEndReachedThreshold={0.5}
                     refreshControl={
-                        onRefresh ? (
-                            <RefreshControl
-                                refreshing={refreshing}
-                                onRefresh={onRefresh}
-                                tintColor={colors.foreground}
-                                colors={[colors.foreground]}
-                            />
-                        ) : undefined
+                        onRefresh ? <RefreshControl refreshing={refreshing} onRefresh={onRefresh} tintColor={colors.foreground} colors={[colors.foreground]} /> : undefined
                     }
                     onScroll={handleScroll}
                     scrollEventThrottle={16}
@@ -452,10 +413,7 @@ export function CrudTable<T extends CrudItemType = CrudItemType>({
 
             {/* Fixed Column Overlay */}
             {fixedColumn && (
-                <View
-                    style={[styles.fixedColumnContainer, { width: fixedColumnWidth }]}
-                    pointerEvents="box-none"
-                >
+                <View style={[styles.fixedColumnContainer, { width: fixedColumnWidth }]} pointerEvents="box-none">
                     {/* Fixed Header (stays at top, doesn't translate) */}
                     {renderFixedHeader()}
 
@@ -470,9 +428,9 @@ export function CrudTable<T extends CrudItemType = CrudItemType>({
                                 ],
                             }}
                         >
-                            {tableData.map((item) => (
+                            {tableData.map((item, index) => (
                                 <TouchableOpacity
-                                    key={keyExtractor(item)}
+                                    key={`fixed-${keyExtractor(item)}-${index}`}
                                     style={[styles.fixedDataCell, { width: fixedColumnWidth }]}
                                     onPress={() => onItemPress?.(item)}
                                     activeOpacity={onItemPress ? 0.7 : 1}
