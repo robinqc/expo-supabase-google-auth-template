@@ -14,6 +14,7 @@ interface UseCrudItemsReturn {
     items: CrudItem[];
     loading: boolean;
     refreshing: boolean;
+    loadingMore: boolean;
     error: Error | null;
     hasMore: boolean;
     total: number;
@@ -28,6 +29,7 @@ export function useCrudItems(options: UseCrudItemsOptions = {}): UseCrudItemsRet
     const [items, setItems] = useState<CrudItem[]>([]);
     const [loading, setLoading] = useState(true);
     const [refreshing, setRefreshing] = useState(false);
+    const [loadingMore, setLoadingMore] = useState(false);
     const [error, setError] = useState<Error | null>(null);
     const [hasMore, setHasMore] = useState(true);
     const [total, setTotal] = useState(0);
@@ -58,6 +60,8 @@ export function useCrudItems(options: UseCrudItemsOptions = {}): UseCrudItemsRet
                     setRefreshing(true);
                 } else if (currentOffset === 0) {
                     setLoading(true);
+                } else {
+                    setLoadingMore(true);
                 }
 
                 setError(null);
@@ -87,15 +91,16 @@ export function useCrudItems(options: UseCrudItemsOptions = {}): UseCrudItemsRet
             } finally {
                 setLoading(false);
                 setRefreshing(false);
+                setLoadingMore(false);
             }
         },
         [user?.id, offset, pageSize, sort, filters, enabled],
     );
 
     const loadMore = useCallback(async () => {
-        if (!hasMore || loading || refreshing) return;
+        if (!hasMore || loading || refreshing || loadingMore) return;
         await fetchItems(false);
-    }, [hasMore, loading, refreshing, fetchItems]);
+    }, [hasMore, loading, refreshing, loadingMore, fetchItems]);
 
     const refresh = useCallback(async () => {
         setOffset(0);
@@ -113,6 +118,7 @@ export function useCrudItems(options: UseCrudItemsOptions = {}): UseCrudItemsRet
         items,
         loading,
         refreshing,
+        loadingMore,
         error,
         hasMore,
         total,

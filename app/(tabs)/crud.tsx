@@ -1,5 +1,6 @@
 import { CrudFilterBar, CrudList } from "@/components/crud";
 import { Button } from "@/components/ui";
+import { HeaderView } from "@/components/ui/HeaderView";
 import { Text } from "@/components/ui/Text";
 import { useAuth } from "@/contexts/AuthContext";
 import { useTheme } from "@/contexts/ThemeContext";
@@ -9,11 +10,9 @@ import { borderRadius, layouts, spacing, useThemedStyles } from "@/lib/styles";
 import { showToast } from "@/lib/toast";
 import { CrudFilters, CrudItem, SortOption, TableColumn, ViewMode } from "@/types/crud";
 import { router } from "expo-router";
-import { StatusBar } from "expo-status-bar";
 import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Alert, View } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function CrudScreen() {
     const { user } = useAuth();
@@ -146,19 +145,16 @@ export default function CrudScreen() {
     ];
 
     return (
-        <SafeAreaView style={styles.container} edges={["top", "left", "right"]}>
-            <StatusBar style={isDark ? "light" : "dark"} />
-
-            {/* Header */}
-            <View style={styles.header}>
-                <Text variant="heading" weight="extrabold">
-                    {t("crud.title")}
-                </Text>
+        <HeaderView
+            title={t("crud.title")}
+            actionButton={
                 <Button size="sm" icon="add" onPress={() => router.push("/crud/create" as any)}>
                     {t("common.new")}
                 </Button>
-            </View>
-
+            }
+            style={styles.container}
+            fixed
+        >
             {/* Filter Bar */}
             <CrudFilterBar
                 viewMode={viewMode}
@@ -190,6 +186,6 @@ export default function CrudScreen() {
                 }
             />
             <View style={{ height: 100 }} />
-        </SafeAreaView>
+        </HeaderView>
     );
 }
