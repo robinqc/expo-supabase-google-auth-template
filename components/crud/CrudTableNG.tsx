@@ -1,10 +1,6 @@
-import { Text } from "@/components/ui/Text";
-import { useTheme } from "@/contexts/ThemeContext";
-import { spacing, useThemedStyles } from "@/lib/styles";
-import { CrudItem as CrudItemType, StickyColumnConfig, TableColumn } from "@/types/crud";
-import _ from "lodash";
 import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { ActivityIndicator, Animated, FlatList, RefreshControl, ScrollView, TouchableOpacity, View } from "react-native";
+import { ActivityIndicator, Animated, FlatList, RefreshControl, ScrollView, StyleSheet, Text, TextStyle, TouchableOpacity, View, ViewStyle } from "react-native";
+import { CrudTableTheme, StickyColumnConfig, TableColumn } from "./CrudTableTypes";
 
 // Create AnimatedFlatList for native-driven scroll events
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -16,9 +12,20 @@ const ROW_HEIGHT = 56;
 const DEFAULT_COLUMN_WIDTH = 120;
 const DEFAULT_FIXED_COLUMN_WIDTH = 150;
 
-interface CrudTableProps<T = CrudItemType> {
+// Internal spacing constants (matching previous values)
+const spacing = {
+    xs: 4,
+    sm: 8,
+    md: 16,
+    lg: 24,
+    xl: 32,
+    xxl: 48,
+};
+
+export interface CrudTableProps<T> {
     items: T[];
     columns: TableColumn<T>[];
+    theme: CrudTableTheme; // Required theme object
     stickyColumn?: StickyColumnConfig;
     loading?: boolean;
     refreshing?: boolean;
@@ -30,11 +37,20 @@ interface CrudTableProps<T = CrudItemType> {
     emptyMessage?: string;
     emptyAction?: React.ReactNode;
     keyExtractor?: (item: T) => string;
+    // Style overrides
+    containerStyle?: ViewStyle;
+    headerRowStyle?: ViewStyle;
+    headerTextStyle?: TextStyle;
+    rowStyle?: ViewStyle;
+    cellTextStyle?: TextStyle;
+    // Custom components
+    TextComponent?: React.ComponentType<any>;
 }
 
-export function CrudTable<T extends CrudItemType = CrudItemType>({
+export function CrudTable<T>({
     items,
     columns,
+    theme,
     stickyColumn,
     loading = false,
     refreshing = false,
@@ -45,9 +61,15 @@ export function CrudTable<T extends CrudItemType = CrudItemType>({
     onItemDelete,
     emptyMessage = "No items found",
     emptyAction,
-    keyExtractor = (item) => item.id,
+    keyExtractor = (item: any) => item.id,
+    containerStyle,
+    headerRowStyle,
+    headerTextStyle,
+    rowStyle,
+    cellTextStyle,
+    TextComponent = Text,
 }: CrudTableProps<T>) {
-    const { colors } = useTheme();
+    const { background, foreground, border, muted, foregroundSecondary } = theme;
 
     // Animated scroll position for syncing fixed column vertically
     const scrollY = useRef(new Animated.Value(0)).current;
@@ -105,7 +127,16 @@ export function CrudTable<T extends CrudItemType = CrudItemType>({
                 sortKey = String(column.accessor);
             }
 
-            const sortedData = _.orderBy(tableData, [sortKey], [newDirection]);
+            // Simple Sort (replacing lodash)
+            const sortedData = [...tableData].sort((a: any, b: any) => {
+                const aVal = a[sortKey];
+                const bVal = b[sortKey];
+
+                if (aVal === bVal) return 0;
+
+                const comparison = aVal > bVal ? 1 : -1;
+                return newDirection === "asc" ? comparison : -comparison;
+            });
 
             setSelectedColumn(column.id);
             setDirection(newDirection);
@@ -119,141 +150,150 @@ export function CrudTable<T extends CrudItemType = CrudItemType>({
         (columnId: string) => {
             if (selectedColumn !== columnId) return null;
             return (
-                <Text
+                <TextComponent
                     style={{
-                        color: colors.foreground,
+                        color: foreground,
                         fontSize: 10,
                         marginLeft: 4,
                         transform: [{ rotate: direction === "desc" ? "180deg" : "0deg" }],
                     }}
                 >
                     ^
-                </Text>
+                </TextComponent>
             );
         },
-        [selectedColumn, direction, colors.foreground],
+        [selectedColumn, direction, foreground, TextComponent],
     );
 
-    // Styles using themed styles hook
-    const styles = useThemedStyles((colors) => ({
-        container: {
-            flex: 1,
-            borderWidth: 1,
-            borderColor: colors.border,
-            backgroundColor: colors.background,
-            borderRadius: spacing.xs,
-            overflow: "hidden",
-        },
-        // Scrollable header row
-        headerRow: {
-            flexDirection: "row",
-            backgroundColor: colors.muted,
-            borderBottomWidth: 2,
-            borderBottomColor: colors.border,
-            height: HEADER_HEIGHT,
-        },
-        headerCell: {
-            paddingHorizontal: spacing.md,
-            justifyContent: "center",
-            height: HEADER_HEIGHT,
-            borderRightWidth: 1,
-            borderRightColor: colors.border,
-        },
-        headerText: {
-            color: colors.foreground,
-            fontSize: 12,
-            fontWeight: "700",
-            textTransform: "uppercase",
-            letterSpacing: 0.5,
-        },
-        // Scrollable data row
-        dataRow: {
-            flexDirection: "row",
-            borderBottomWidth: 1,
-            borderBottomColor: colors.border,
-            height: ROW_HEIGHT,
-        },
-        dataCell: {
-            paddingHorizontal: spacing.md,
-            justifyContent: "center",
-            height: ROW_HEIGHT,
-            borderRightWidth: 1,
-            borderRightColor: colors.border,
-        },
-        cellText: {
-            color: colors.foreground,
-            fontSize: 14,
-        },
-        // Fixed column overlay
-        fixedColumnContainer: {
-            position: "absolute",
-            left: 0,
-            top: 0,
-            bottom: 0,
-            backgroundColor: colors.background,
-            borderRightWidth: 2,
-            borderRightColor: colors.border,
-            zIndex: 10,
-        },
-        fixedHeaderCell: {
-            backgroundColor: colors.muted,
-            paddingHorizontal: spacing.md,
-            justifyContent: "center",
-            height: HEADER_HEIGHT,
-            borderBottomWidth: 2,
-            borderBottomColor: colors.border,
-        },
-        fixedColumnBody: {
-            flex: 1,
-            overflow: "hidden",
-        },
-        fixedDataCell: {
-            paddingHorizontal: spacing.md,
-            justifyContent: "center",
-            height: ROW_HEIGHT,
-            borderBottomWidth: 1,
-            borderBottomColor: colors.border,
-            backgroundColor: colors.background,
-        },
-        // Empty and loading states
-        emptyContainer: {
-            flex: 1,
-            alignItems: "center",
-            justifyContent: "center",
-            paddingVertical: spacing.xxl,
-            gap: spacing.md,
-        },
-        emptyText: {
-            color: colors.foregroundSecondary,
-            fontSize: 14,
-        },
-        loadingContainer: {
-            flex: 1,
-            alignItems: "center",
-            justifyContent: "center",
-            paddingVertical: spacing.xxl,
-        },
-        footer: {
-            paddingVertical: spacing.lg,
-            alignItems: "center",
-        },
-    }));
+    // Memoized styles based on theme
+    const styles = useMemo(
+        () =>
+            StyleSheet.create({
+                container: {
+                    flex: 1,
+                    borderWidth: 1,
+                    borderColor: border,
+                    backgroundColor: background,
+                    borderRadius: spacing.xs,
+                    overflow: "hidden",
+                },
+                // Scrollable header row
+                headerRow: {
+                    flexDirection: "row",
+                    backgroundColor: muted,
+                    borderBottomWidth: 2,
+                    borderBottomColor: border,
+                    height: HEADER_HEIGHT,
+                },
+                headerCell: {
+                    paddingHorizontal: spacing.md,
+                    justifyContent: "center",
+                    height: HEADER_HEIGHT,
+                    borderRightWidth: 1,
+                    borderRightColor: border,
+                },
+                headerText: {
+                    color: foreground,
+                    fontSize: 12,
+                    fontWeight: "700",
+                    textTransform: "uppercase",
+                    letterSpacing: 0.5,
+                },
+                // Scrollable data row
+                dataRow: {
+                    flexDirection: "row",
+                    borderBottomWidth: 1,
+                    borderBottomColor: border,
+                    height: ROW_HEIGHT,
+                },
+                dataCell: {
+                    paddingHorizontal: spacing.md,
+                    justifyContent: "center",
+                    height: ROW_HEIGHT,
+                    borderRightWidth: 1,
+                    borderRightColor: border,
+                },
+                cellText: {
+                    color: foreground,
+                    fontSize: 14,
+                },
+                // Fixed column overlay
+                fixedColumnContainer: {
+                    position: "absolute",
+                    left: 0,
+                    top: 0,
+                    bottom: 0,
+                    backgroundColor: background,
+                    borderRightWidth: 2,
+                    borderRightColor: border,
+                    zIndex: 10,
+                },
+                fixedHeaderCell: {
+                    backgroundColor: muted,
+                    paddingHorizontal: spacing.md,
+                    justifyContent: "center",
+                    height: HEADER_HEIGHT,
+                    borderBottomWidth: 2,
+                    borderBottomColor: border,
+                },
+                fixedColumnBody: {
+                    flex: 1,
+                    overflow: "hidden",
+                },
+                fixedDataCell: {
+                    paddingHorizontal: spacing.md,
+                    justifyContent: "center",
+                    height: ROW_HEIGHT,
+                    borderBottomWidth: 1,
+                    borderBottomColor: border,
+                    backgroundColor: background,
+                },
+                // Empty and loading states
+                emptyContainer: {
+                    flex: 1,
+                    alignItems: "center",
+                    justifyContent: "center",
+                    paddingVertical: spacing.xxl,
+                    gap: spacing.md,
+                },
+                emptyText: {
+                    color: foregroundSecondary || foreground,
+                    fontSize: 14,
+                },
+                loadingContainer: {
+                    flex: 1,
+                    alignItems: "center",
+                    justifyContent: "center",
+                    paddingVertical: spacing.xxl,
+                },
+                footer: {
+                    paddingVertical: spacing.lg,
+                    alignItems: "center",
+                },
+            }),
+        [background, foreground, border, muted, foregroundSecondary, spacing],
+    );
 
     // Render scrollable header row
     const renderScrollableHeader = useCallback(() => {
         return (
-            <View style={styles.headerRow}>
+            <View style={[styles.headerRow, headerRowStyle]}>
                 {scrollableColumns.map((column) => {
                     const width = column.width ?? column.minWidth ?? DEFAULT_COLUMN_WIDTH;
                     return (
                         <TouchableOpacity key={column.id} style={[styles.headerCell, { width }]} onPress={() => sortTable(column)} activeOpacity={0.7}>
                             <View style={{ flexDirection: "row", alignItems: "center" }}>
-                                <Text
-                                    style={[styles.headerText, column.align === "center" && { textAlign: "center" }, column.align === "right" && { textAlign: "right" }]}
+                                <TextComponent
+                                    style={[
+                                        styles.headerText,
+                                        headerTextStyle,
+                                        column.align === "center" && { textAlign: "center" },
+                                        column.align === "right" && { textAlign: "right" },
+                                    ]}
                                     numberOfLines={1}
                                 >
                                     {column.label}
-                                </Text>
+                                </TextComponent>
                                 {renderSortArrow(column.id)}
                             </View>
                         </TouchableOpacity>
@@ -261,13 +301,13 @@ export function CrudTable<T extends CrudItemType = CrudItemType>({
                 })}
             </View>
         );
-    }, [scrollableColumns, styles, sortTable, renderSortArrow]);
+    }, [scrollableColumns, styles, sortTable, renderSortArrow, headerRowStyle, headerTextStyle, TextComponent]);
 
     // Render scrollable data row
     const renderScrollableRow = useCallback(
         ({ item }: { item: T }) => {
             return (
-                <TouchableOpacity style={styles.dataRow} onPress={() => onItemPress?.(item)} activeOpacity={onItemPress ? 0.7 : 1} disabled={!onItemPress}>
+                <TouchableOpacity style={[styles.dataRow, rowStyle]} onPress={() => onItemPress?.(item)} activeOpacity={onItemPress ? 0.7 : 1} disabled={!onItemPress}>
                     {scrollableColumns.map((column) => {
                         const width = column.width ?? column.minWidth ?? DEFAULT_COLUMN_WIDTH;
 
@@ -275,14 +315,19 @@ export function CrudTable<T extends CrudItemType = CrudItemType>({
                         if (typeof column.accessor === "function") {
                             content = column.accessor(item);
                         } else {
-                            const value = item[column.accessor as keyof T];
+                            const value = (item as any)[column.accessor];
                             content = (
-                                <Text
-                                    style={[styles.cellText, column.align === "center" && { textAlign: "center" }, column.align === "right" && { textAlign: "right" }]}
+                                <TextComponent
+                                    style={[
+                                        styles.cellText,
+                                        cellTextStyle,
+                                        column.align === "center" && { textAlign: "center" },
+                                        column.align === "right" && { textAlign: "right" },
+                                    ]}
                                     numberOfLines={2}
                                 >
                                     {String(value ?? "")}
-                                </Text>
+                                </TextComponent>
                             );
                         }
 
@@ -295,7 +340,7 @@ export function CrudTable<T extends CrudItemType = CrudItemType>({
                 </TouchableOpacity>
             );
         },
-        [scrollableColumns, styles, onItemPress],
+        [scrollableColumns, styles, onItemPress, rowStyle, cellTextStyle, TextComponent],
     );
 
     // Render fixed header
@@ -305,17 +350,22 @@ export function CrudTable<T extends CrudItemType = CrudItemType>({
         return (
             <TouchableOpacity style={[styles.fixedHeaderCell, { width: fixedColumnWidth }]} onPress={() => sortTable(fixedColumn)} activeOpacity={0.7}>
                 <View style={{ flexDirection: "row", alignItems: "center" }}>
-                    <Text
-                        style={[styles.headerText, fixedColumn.align === "center" && { textAlign: "center" }, fixedColumn.align === "right" && { textAlign: "right" }]}
+                    <TextComponent
+                        style={[
+                            styles.headerText,
+                            headerTextStyle,
+                            fixedColumn.align === "center" && { textAlign: "center" },
+                            fixedColumn.align === "right" && { textAlign: "right" },
+                        ]}
                         numberOfLines={1}
                     >
                         {fixedColumn.label}
-                    </Text>
+                    </TextComponent>
                     {renderSortArrow(fixedColumn.id)}
                 </View>
             </TouchableOpacity>
         );
-    }, [fixedColumn, fixedColumnWidth, styles, sortTable, renderSortArrow]);
+    }, [fixedColumn, fixedColumnWidth, styles, sortTable, renderSortArrow, headerTextStyle, TextComponent]);
 
     // Render fixed cell content
     const renderFixedCellContent = useCallback(
@@ -326,20 +376,20 @@ export function CrudTable<T extends CrudItemType = CrudItemType>({
             if (typeof fixedColumn.accessor === "function") {
                 content = fixedColumn.accessor(item);
             } else {
-                const value = item[fixedColumn.accessor as keyof T];
+                const value = (item as any)[fixedColumn.accessor];
                 content = (
-                    <Text
-                        style={[styles.cellText, fixedColumn.align === "center" && { textAlign: "center" }, fixedColumn.align === "right" && { textAlign: "right" }]}
+                    <TextComponent
+                        style={[styles.cellText, cellTextStyle, fixedColumn.align === "center" && { textAlign: "center" }, fixedColumn.align === "right" && { textAlign: "right" }]}
                         numberOfLines={2}
                     >
                         {String(value ?? "")}
-                    </Text>
+                    </TextComponent>
                 );
             }
 
             return content;
         },
-        [fixedColumn, styles.cellText],
+        [fixedColumn, styles.cellText, cellTextStyle, TextComponent],
     );
 
     // Render empty state
@@ -347,39 +397,39 @@ export function CrudTable<T extends CrudItemType = CrudItemType>({
         if (loading) {
             return (
                 <View style={styles.loadingContainer}>
-                    <ActivityIndicator size="large" color={colors.foreground} />
+                    <ActivityIndicator size="large" color={foreground} />
                 </View>
             );
         }
 
         return (
             <View style={styles.emptyContainer}>
-                <Text style={styles.emptyText}>{emptyMessage}</Text>
+                <TextComponent style={styles.emptyText}>{emptyMessage}</TextComponent>
                 {emptyAction}
             </View>
         );
-    }, [loading, colors.foreground, emptyMessage, emptyAction, styles]);
+    }, [loading, foreground, emptyMessage, emptyAction, styles, TextComponent]);
 
     // Render footer (loading more indicator)
     const renderFooter = useCallback(() => {
         if (!hasMore) return null;
         return (
             <View style={styles.footer}>
-                <ActivityIndicator size="small" color={colors.foreground} />
+                <ActivityIndicator size="small" color={foreground} />
             </View>
         );
-    }, [hasMore, colors.foreground, styles.footer]);
+    }, [hasMore, foreground, styles.footer]);
 
     // Native-driven scroll handler for syncing fixed column
     const handleScroll = Animated.event([{ nativeEvent: { contentOffset: { y: scrollY } } }], { useNativeDriver: true });
 
     // Early return for initial loading with no data
     if (loading && tableData.length === 0) {
-        return <View style={styles.container}>{renderEmpty()}</View>;
+        return <View style={[styles.container, containerStyle]}>{renderEmpty()}</View>;
     }
 
     return (
-        <View style={styles.container}>
+        <View style={[styles.container, containerStyle]}>
             {/* Horizontal scroll wrapper for left/right scrolling */}
             <ScrollView
                 horizontal
@@ -401,12 +451,10 @@ export function CrudTable<T extends CrudItemType = CrudItemType>({
                     ListFooterComponent={renderFooter}
                     onEndReached={hasMore ? onLoadMore : undefined}
                     onEndReachedThreshold={0.5}
-                    refreshControl={
-                        onRefresh ? <RefreshControl refreshing={refreshing} onRefresh={onRefresh} tintColor={colors.foreground} colors={[colors.foreground]} /> : undefined
-                    }
+                    refreshControl={onRefresh ? <RefreshControl refreshing={refreshing} onRefresh={onRefresh} tintColor={foreground} colors={[foreground]} /> : undefined}
                     onScroll={handleScroll}
                     scrollEventThrottle={16}
-                    showsVerticalScrollIndicator={true}
+                    showsVerticalScrollIndicator={true} // Add this to ensure vertical scrolling is visible
                     style={{ width: scrollableContentWidth }}
                 />
             </ScrollView>

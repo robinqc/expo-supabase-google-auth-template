@@ -127,6 +127,7 @@ export function CrudList<T extends CrudItemType = CrudItemType>({
             <CrudTable
                 items={items}
                 columns={columns}
+                theme={colors}
                 stickyColumn={stickyColumn}
                 loading={loading}
                 refreshing={refreshing}
