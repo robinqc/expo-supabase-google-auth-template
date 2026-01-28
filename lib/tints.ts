@@ -11,11 +11,11 @@
  * Tints: Amber, Bronze, Copper (default), Terracotta, Sienna
  */
 
-export type TintName = "teal" | "bronze" | "copper" | "terracotta" | "sienna";
+export type TintName = "teal" | "amber" | "earthGreen" | "purple" | "sienna";
 
-export const DEFAULT_TINT: TintName = "copper";
+export const DEFAULT_TINT: TintName = "earthGreen";
 
-export const TINT_NAMES: TintName[] = ["teal", "bronze", "copper", "terracotta", "sienna"];
+export const TINT_NAMES: TintName[] = ["teal", "amber", "earthGreen", "purple", "sienna"];
 
 export interface TintMeta {
     label: string;
@@ -24,9 +24,9 @@ export interface TintMeta {
 
 export const tintMeta: Record<TintName, TintMeta> = {
     teal: { label: "Teal", swatch: "#077287" },
-    bronze: { label: "Bronze", swatch: "#ca8a04" },
-    copper: { label: "Copper", swatch: "#ea580c" },
-    terracotta: { label: "Terracotta", swatch: "#dc2626" },
+    earthGreen: { label: "Earth Green", swatch: "#3f7f63" },
+    amber: { label: "Amber", swatch: "#ca8a04" },
+    purple: { label: "Purple", swatch: "#6b5ca5" },
     sienna: { label: "Sienna", swatch: "#92400e" },
 };
 
@@ -122,361 +122,361 @@ export const tints: Record<TintName, TintPalette> = {
         },
         dark: {
             // Backgrounds
-            background: "#18130a",
-            backgroundSecondary: "#2d2312",
+            background: "#0E1A21",
+            backgroundSecondary: "#142732",
 
             // Foreground (text)
-            foreground: "#fef3e2",
-            foregroundSecondary: "#fcd34d",
-            foregroundTertiary: "#a88a3d",
+            foreground: "#e6f1f3",
+            foregroundSecondary: "#cde3e7",
+            foregroundTertiary: "#b5d5db",
 
             // Legacy text colors
-            text: "#fef3e2",
-            textSecondary: "#fcd34d",
-            textTertiary: "#a88a3d",
+            text: "#E6F1F5",
+            textSecondary: "#A9C6D3",
+            textTertiary: "#6F8F9E",
 
             // Primary
-            primary: "#fbbf24",
-            primaryLight: "#fcd34d",
-            primaryDark: "#f59e0b",
+            primary: "#519cab",
+            primaryLight: "#6aaab7",
+            primaryDark: "#00505c",
 
             // Accent (complementary - sky blue)
             accent: "#38bdf8",
             accentLight: "#7dd3fc",
 
             // Semantic colors
-            card: "#2d2312",
-            muted: "#2d2312",
-            mutedForeground: "#fcd34d",
+            card: "#1A3442",
+            muted: "#214A5D",
+            mutedForeground: "#e6f1f3",
 
             // UI elements
-            border: "#78591c",
-            ring: "#fbbf24",
+            border: "#2B4F63",
+            ring: "#077287",
 
             // Icon colors
-            icon: "#fef3e2",
-            iconSecondary: "#fcd34d",
-            iconMuted: "#a88a3d",
+            icon: "#e6f1f3",
+            iconSecondary: "#cde3e7",
+            iconMuted: "#b5d5db",
         },
     },
 
-    // Bronze - Rich metallic gold-brown tones
-    bronze: {
+    amber: {
         light: {
             // Backgrounds
-            background: "#fdfcf5",
-            backgroundSecondary: "#f7f3e3",
+            background: "#f8f5f0",
+            backgroundSecondary: "#fdfefe",
 
             // Foreground (text)
-            foreground: "#1a1605",
-            foregroundSecondary: "#6b5c1a",
-            foregroundTertiary: "#9a8530",
+            foreground: "#2f2618",
+            foregroundSecondary: "#443824",
+            foregroundTertiary: "#8a7a5c",
 
             // Legacy text colors
-            text: "#1a1605",
-            textSecondary: "#6b5c1a",
-            textTertiary: "#9a8530",
+            text: "#2f2618",
+            textSecondary: "#5a4a30",
+            textTertiary: "#7f6a3f",
 
             // Primary
-            primary: "#ca8a04",
-            primaryLight: "#eab308",
-            primaryDark: "#a16207",
+            primary: "#c0841a",
+            primaryLight: "#e2b85c",
+            primaryDark: "#8f5f10",
 
-            // Accent (complementary - indigo)
-            accent: "#4f46e5",
-            accentLight: "#6366f1",
+            // Accent (deep complementary – burnt umber)
+            accent: "#92400e",
+            accentLight: "#b45309",
 
             // Semantic colors
             card: "#ffffff",
-            muted: "#f7f3e3",
-            mutedForeground: "#6b5c1a",
+            muted: "#f1ede4",
+            mutedForeground: "#757269",
 
             // UI elements
-            border: "#fef08a",
-            ring: "#ca8a04",
+            border: "#f1ede4",
+            ring: "#c0841a",
 
             // Icon colors
-            icon: "#1a1605",
-            iconSecondary: "#6b5c1a",
-            iconMuted: "#9a8530",
+            icon: "#443824",
+            iconSecondary: "#5a4a30",
+            iconMuted: "#a58f63",
         },
+
         dark: {
             // Backgrounds
-            background: "#16140a",
-            backgroundSecondary: "#2a2610",
+            background: "#1c160c",
+            backgroundSecondary: "#261d10",
 
             // Foreground (text)
-            foreground: "#fef9c3",
-            foregroundSecondary: "#fde047",
-            foregroundTertiary: "#9a8530",
+            foreground: "#f1ede4",
+            foregroundSecondary: "#e2d9c3",
+            foregroundTertiary: "#cbbd9a",
 
             // Legacy text colors
-            text: "#fef9c3",
-            textSecondary: "#fde047",
-            textTertiary: "#9a8530",
+            text: "#f1ede4",
+            textSecondary: "#d6c9ab",
+            textTertiary: "#9f8d63",
 
             // Primary
-            primary: "#facc15",
-            primaryLight: "#fde047",
-            primaryDark: "#eab308",
+            primary: "#e2b85c",
+            primaryLight: "#f0cf85",
+            primaryDark: "#8f5f10",
 
-            // Accent (complementary - indigo)
-            accent: "#818cf8",
-            accentLight: "#a5b4fc",
+            // Accent (soft gold highlight)
+            accent: "#fbbf24",
+            accentLight: "#fde68a",
 
             // Semantic colors
-            card: "#2a2610",
-            muted: "#2a2610",
-            mutedForeground: "#fde047",
+            card: "#2a2114",
+            muted: "#3a2d19",
+            mutedForeground: "#f1ede4",
 
             // UI elements
-            border: "#6b5c1a",
-            ring: "#facc15",
+            border: "#4a3a21",
+            ring: "#c0841a",
 
             // Icon colors
-            icon: "#fef9c3",
-            iconSecondary: "#fde047",
-            iconMuted: "#9a8530",
+            icon: "#f1ede4",
+            iconSecondary: "#e2d9c3",
+            iconMuted: "#cbbd9a",
         },
     },
 
     // Copper - Warm orange-brown tones (DEFAULT - matches original theme)
-    copper: {
+    earthGreen: {
         light: {
             // Backgrounds
-            background: "#fdf8f3",
-            backgroundSecondary: "#fef0e6",
+            background: "#f3f7f2",
+            backgroundSecondary: "#fdfefe",
 
             // Foreground (text)
-            foreground: "#1c1310",
-            foregroundSecondary: "#7c4a2d",
-            foregroundTertiary: "#a8714d",
+            foreground: "#1f2f24",
+            foregroundSecondary: "#2e4436",
+            foregroundTertiary: "#6b8f7a",
 
             // Legacy text colors
-            text: "#1c1310",
-            textSecondary: "#7c4a2d",
-            textTertiary: "#a8714d",
+            text: "#1f2f24",
+            textSecondary: "#3c5a47",
+            textTertiary: "#5f8a72",
 
             // Primary
-            primary: "#ea580c",
-            primaryLight: "#f97316",
-            primaryDark: "#c2410c",
+            primary: "#3f7f63",
+            primaryLight: "#6fb899",
+            primaryDark: "#2a5a45",
 
-            // Accent (complementary - teal)
-            accent: "#0d9488",
-            accentLight: "#14b8a6",
+            // Accent (earthy complement – clay / rust)
+            accent: "#b4532a",
+            accentLight: "#d9774a",
 
             // Semantic colors
             card: "#ffffff",
-            muted: "#fef0e6",
-            mutedForeground: "#7c4a2d",
+            muted: "#e6efe9",
+            mutedForeground: "#6f7572",
 
             // UI elements
-            border: "#fed7aa",
-            ring: "#ea580c",
+            border: "#e6efe9",
+            ring: "#3f7f63",
 
             // Icon colors
-            icon: "#1c1310",
-            iconSecondary: "#7c4a2d",
-            iconMuted: "#a8714d",
+            icon: "#2e4436",
+            iconSecondary: "#3c5a47",
+            iconMuted: "#7aa693",
         },
+
         dark: {
             // Backgrounds
-            background: "#1a120d",
-            backgroundSecondary: "#2e1f16",
+            background: "#121b16",
+            backgroundSecondary: "#18261f",
 
             // Foreground (text)
-            foreground: "#ffedd5",
-            foregroundSecondary: "#fdba74",
-            foregroundTertiary: "#a8714d",
+            foreground: "#e6efe9",
+            foregroundSecondary: "#cfe2d6",
+            foregroundTertiary: "#b4cfc0",
 
             // Legacy text colors
-            text: "#ffedd5",
-            textSecondary: "#fdba74",
-            textTertiary: "#a8714d",
+            text: "#e6efe9",
+            textSecondary: "#b6cdbf",
+            textTertiary: "#7f9c8c",
 
             // Primary
-            primary: "#fb923c",
-            primaryLight: "#fdba74",
-            primaryDark: "#f97316",
+            primary: "#7fbfa3",
+            primaryLight: "#9fd7be",
+            primaryDark: "#2a5a45",
 
-            // Accent (complementary - teal)
-            accent: "#2dd4bf",
-            accentLight: "#5eead4",
+            // Accent (soft mossy contrast)
+            accent: "#84cc16",
+            accentLight: "#bef264",
 
             // Semantic colors
-            card: "#2e1f16",
-            muted: "#2e1f16",
-            mutedForeground: "#fdba74",
+            card: "#1d3329",
+            muted: "#244236",
+            mutedForeground: "#e6efe9",
 
             // UI elements
-            border: "#7c4a2d",
-            ring: "#fb923c",
+            border: "#2f4d3f",
+            ring: "#3f7f63",
 
             // Icon colors
-            icon: "#ffedd5",
-            iconSecondary: "#fdba74",
-            iconMuted: "#a8714d",
+            icon: "#e6efe9",
+            iconSecondary: "#cfe2d6",
+            iconMuted: "#b4cfc0",
         },
     },
 
-    // Terracotta - Earthy red-orange tones
-    terracotta: {
+    purple: {
         light: {
             // Backgrounds
-            background: "#fdf6f5",
-            backgroundSecondary: "#fee8e6",
+            background: "#f4f3f8",
+            backgroundSecondary: "#fdfefe",
 
             // Foreground (text)
-            foreground: "#1c0f0d",
-            foregroundSecondary: "#7c2d26",
-            foregroundTertiary: "#a84d45",
+            foreground: "#2a2438",
+            foregroundSecondary: "#3c3350",
+            foregroundTertiary: "#7b6f96",
 
             // Legacy text colors
-            text: "#1c0f0d",
-            textSecondary: "#7c2d26",
-            textTertiary: "#a84d45",
+            text: "#2a2438",
+            textSecondary: "#4a3f66",
+            textTertiary: "#6f63a6",
 
             // Primary
-            primary: "#dc2626",
-            primaryLight: "#ef4444",
-            primaryDark: "#b91c1c",
+            primary: "#6b5ca5",
+            primaryLight: "#9a8fd1",
+            primaryDark: "#4a3f7a",
 
-            // Accent (complementary - cyan)
-            accent: "#0891b2",
-            accentLight: "#06b6d4",
+            // Accent (warm complementary – rose / plum)
+            accent: "#b83280",
+            accentLight: "#d66aa9",
 
             // Semantic colors
             card: "#ffffff",
-            muted: "#fee8e6",
-            mutedForeground: "#7c2d26",
+            muted: "#ebe9f2",
+            mutedForeground: "#6f6d78",
 
             // UI elements
-            border: "#fecaca",
-            ring: "#dc2626",
+            border: "#ebe9f2",
+            ring: "#6b5ca5",
 
             // Icon colors
-            icon: "#1c0f0d",
-            iconSecondary: "#7c2d26",
-            iconMuted: "#a84d45",
+            icon: "#3c3350",
+            iconSecondary: "#4a3f66",
+            iconMuted: "#8f85b3",
         },
+
         dark: {
             // Backgrounds
-            background: "#1a0d0b",
-            backgroundSecondary: "#2e1714",
+            background: "#14121d",
+            backgroundSecondary: "#1b1830",
 
             // Foreground (text)
-            foreground: "#fee2e2",
-            foregroundSecondary: "#fca5a5",
-            foregroundTertiary: "#a84d45",
+            foreground: "#ebe9f2",
+            foregroundSecondary: "#d6d2e5",
+            foregroundTertiary: "#beb9d6",
 
             // Legacy text colors
-            text: "#fee2e2",
-            textSecondary: "#fca5a5",
-            textTertiary: "#a84d45",
+            text: "#ebe9f2",
+            textSecondary: "#c9c4df",
+            textTertiary: "#8d88b0",
 
             // Primary
-            primary: "#f87171",
-            primaryLight: "#fca5a5",
-            primaryDark: "#ef4444",
+            primary: "#9a8fd1",
+            primaryLight: "#b6adeb",
+            primaryDark: "#4a3f7a",
 
-            // Accent (complementary - cyan)
-            accent: "#22d3ee",
-            accentLight: "#67e8f9",
-
-            // Semantic colors
-            card: "#2e1714",
-            muted: "#2e1714",
-            mutedForeground: "#fca5a5",
-
-            // UI elements
-            border: "#7c2d26",
-            ring: "#f87171",
-
-            // Icon colors
-            icon: "#fee2e2",
-            iconSecondary: "#fca5a5",
-            iconMuted: "#a84d45",
-        },
-    },
-
-    // Sienna - Deep burnt brown tones
-    sienna: {
-        light: {
-            // Backgrounds
-            background: "#faf8f6",
-            backgroundSecondary: "#f2ebe5",
-
-            // Foreground (text)
-            foreground: "#1a1512",
-            foregroundSecondary: "#5c4a3d",
-            foregroundTertiary: "#8a7264",
-
-            // Legacy text colors
-            text: "#1a1512",
-            textSecondary: "#5c4a3d",
-            textTertiary: "#8a7264",
-
-            // Primary
-            primary: "#92400e",
-            primaryLight: "#b45309",
-            primaryDark: "#78350f",
-
-            // Accent (complementary - violet)
-            accent: "#7c3aed",
-            accentLight: "#8b5cf6",
-
-            // Semantic colors
-            card: "#ffffff",
-            muted: "#f2ebe5",
-            mutedForeground: "#5c4a3d",
-
-            // UI elements
-            border: "#e8ddd3",
-            ring: "#92400e",
-
-            // Icon colors
-            icon: "#1a1512",
-            iconSecondary: "#5c4a3d",
-            iconMuted: "#8a7264",
-        },
-        dark: {
-            // Backgrounds
-            background: "#171310",
-            backgroundSecondary: "#2a231d",
-
-            // Foreground (text)
-            foreground: "#f2ebe5",
-            foregroundSecondary: "#d6c4b8",
-            foregroundTertiary: "#8a7264",
-
-            // Legacy text colors
-            text: "#f2ebe5",
-            textSecondary: "#d6c4b8",
-            textTertiary: "#8a7264",
-
-            // Primary
-            primary: "#c09e7f",
-            primaryLight: "#d6c4b8",
-            primaryDark: "#a8825d",
-
-            // Accent (complementary - violet)
+            // Accent (cool contrast – lavender glow)
             accent: "#a78bfa",
             accentLight: "#c4b5fd",
 
             // Semantic colors
-            card: "#2a231d",
-            muted: "#2a231d",
-            mutedForeground: "#d6c4b8",
+            card: "#201c36",
+            muted: "#2a2550",
+            mutedForeground: "#ebe9f2",
 
             // UI elements
-            border: "#5c4a3d",
-            ring: "#c09e7f",
+            border: "#342f5e",
+            ring: "#6b5ca5",
 
             // Icon colors
-            icon: "#f2ebe5",
-            iconSecondary: "#d6c4b8",
-            iconMuted: "#8a7264",
+            icon: "#ebe9f2",
+            iconSecondary: "#d6d2e5",
+            iconMuted: "#beb9d6",
+        },
+    },
+
+    sienna: {
+        light: {
+            // Backgrounds
+            background: "#f8f2ee",
+            backgroundSecondary: "#fffdfb",
+
+            // Foreground (text)
+            foreground: "#3a1f14",
+            foregroundSecondary: "#543022",
+            foregroundTertiary: "#8b5a44ff",
+
+            // Legacy text colors
+            text: "#3a1f14",
+            textSecondary: "#6a3b28",
+            textTertiary: "#9a5b3c",
+
+            // Primary (sienna)
+            primary: "#a0522d", // classic sienna
+            primaryLight: "#c7794fff",
+            primaryDark: "#6f2f14",
+
+            // Accent (complementary – cool blue)
+            accent: "#2563eb",
+            accentLight: "#60a5fa",
+
+            // Semantic colors
+            card: "#ffffff",
+            muted: "#efe3dc",
+            mutedForeground: "#7b6e68",
+
+            // UI elements
+            border: "#efe3dc",
+            ring: "#a0522d",
+
+            // Icon colors
+            icon: "#4a2618",
+            iconSecondary: "#6a3b28",
+            iconMuted: "#b68a73",
+        },
+        dark: {
+            // Backgrounds
+            background: "#1b120e",
+            backgroundSecondary: "#261a14",
+
+            // Foreground (text)
+            foreground: "#f4ebe6",
+            foregroundSecondary: "#e6d6cc",
+            foregroundTertiary: "#d2bfb2",
+
+            // Legacy text colors
+            text: "#f4ebe6",
+            textSecondary: "#d2bfb2",
+            textTertiary: "#a88f80",
+
+            // Primary
+            primary: "#d08b64",
+            primaryLight: "#e3a87f",
+            primaryDark: "#6f2f14",
+
+            // Accent (cool contrast)
+            accent: "#38bdf8",
+            accentLight: "#7dd3fc",
+
+            // Semantic colors
+            card: "#2c1e17",
+            muted: "#3a261d",
+            mutedForeground: "#f4ebe6",
+
+            // UI elements
+            border: "#4a3126",
+            ring: "#d08b64",
+
+            // Icon colors
+            icon: "#f4ebe6",
+            iconSecondary: "#e6d6cc",
+            iconMuted: "#d2bfb2",
         },
     },
 };

@@ -21,6 +21,7 @@ interface SegmentedControlProps {
 
 export function SegmentedControl({ segments, value, onChange, size = "md", style }: SegmentedControlProps) {
     const { colors } = useTheme();
+    const { isDark } = useTheme();
 
     const styles = useThemedStyles((colors) => ({
         container: {
@@ -38,7 +39,7 @@ export function SegmentedControl({ segments, value, onChange, size = "md", style
             flexDirection: "row",
         },
         activeSegment: {
-            backgroundColor: colors.primaryDark,
+            backgroundColor: isDark ? colors.primaryLight : colors.primaryDark,
         },
         segmentText: {
             color: colors.foregroundSecondary,
@@ -46,7 +47,7 @@ export function SegmentedControl({ segments, value, onChange, size = "md", style
             fontWeight: "600",
         },
         activeSegmentText: {
-            color: colors.background,
+            color: isDark ? colors.background : colors.background,
         },
         segmentIcon: {
             color: colors.foregroundSecondary,

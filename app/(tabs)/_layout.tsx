@@ -37,6 +37,7 @@ export default function TabLayout() {
                 name="crud"
                 options={{
                     title: t("tabs.crud"),
+                    href: user ? undefined : null,
                     tabBarIcon: ({ color, size }) => <Ionicons name="add-circle-outline" size={20} color={color} />,
                 }}
             />
