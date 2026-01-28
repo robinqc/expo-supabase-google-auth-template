@@ -24,7 +24,7 @@ export function CrudFilterBar({ viewMode, onViewModeChange, sortOption, onSortCh
             flexDirection: "row",
             alignItems: "center",
             justifyContent: "space-between",
-            paddingHorizontal: spacing.lg,
+            paddingHorizontal: spacing.md,
             paddingVertical: spacing.md,
             gap: spacing.md,
             zIndex: 10,

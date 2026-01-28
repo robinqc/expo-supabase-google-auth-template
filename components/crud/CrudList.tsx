@@ -129,7 +129,10 @@ export function CrudList<T extends CrudItemType = CrudItemType>({
             <StickyTable
                 items={items}
                 columns={columns}
-                theme={colors}
+                theme={{
+                    ...colors,
+                    background: colors.backgroundSecondary,
+                }}
                 stickyColumn={stickyColumn}
                 loading={loading}
                 refreshing={refreshing}

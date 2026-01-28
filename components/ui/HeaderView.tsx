@@ -24,8 +24,8 @@ export function HeaderView({ title, actionButton, children, scrollViewProps, sty
             backgroundColor: colors.background,
         },
         header: {
-            paddingHorizontal: spacing.lg,
-            paddingVertical: 0,
+            paddingHorizontal: spacing.md,
+            paddingTop: spacing.md,
             ...layouts.rowBetween,
         },
         content: {

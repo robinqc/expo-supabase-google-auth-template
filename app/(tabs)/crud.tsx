@@ -185,7 +185,6 @@ export default function CrudScreen() {
                     </Button>
                 }
             />
-            <View style={{ height: 100 }} />
         </HeaderView>
     );
 }
