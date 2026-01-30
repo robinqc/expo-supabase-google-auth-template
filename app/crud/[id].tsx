@@ -223,7 +223,7 @@ export default function CrudDetailPage() {
 
                 {/* Card */}
                 <Animated.View entering={FadeIn.duration(300)} style={styles.cardContainer}>
-                    <Card variant="elevated" padding="lg" style={styles.cardContent}>
+                    <Card variant="outlined" padding="lg" style={styles.cardContent}>
                         <View style={styles.cardHeader}>
                             <StatusBadge status={item.status} />
                             <View style={styles.dateContainer}>

@@ -1,3 +1,4 @@
+import { Card } from "@/components/ui";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { useTheme } from "@/contexts/ThemeContext";
 import { LanguageCode } from "@/lib/i18n";
@@ -109,8 +110,8 @@ export default function SettingsScreen() {
             marginLeft: spacing.sm,
         },
         optionsContainer: {
-            backgroundColor: colors.backgroundSecondary,
-            borderRadius: borderRadius.xl,
+            paddingHorizontal: 0,
+            paddingVertical: 0,
             overflow: "hidden",
         },
         optionItem: {
@@ -166,7 +167,6 @@ export default function SettingsScreen() {
             flexDirection: "row",
             justifyContent: "space-between",
             gap: spacing.md,
-            backgroundColor: colors.backgroundSecondary,
             borderRadius: borderRadius.xl,
             padding: spacing.md,
         },
@@ -220,7 +220,7 @@ export default function SettingsScreen() {
                         </Text>
                     </View>
 
-                    <View style={styles.optionsContainer}>
+                    <Card variant="outlined" style={styles.optionsContainer}>
                         {THEME_OPTIONS.map((option, index) => {
                             const isSelected = theme === option.value;
                             const isLast = index === THEME_OPTIONS.length - 1;
@@ -252,22 +252,22 @@ export default function SettingsScreen() {
                                 </View>
                             );
                         })}
-                    </View>
+                    </Card>
 
                     {/* Current Theme Info */}
-                    <View style={styles.infoContainer}>
+                    <Card variant="outlined" style={styles.infoContainer}>
                         <Ionicons name="information-circle" size={20} color={colors.info} />
                         <Text variant="label" color="secondary" style={styles.infoText}>
                             {theme === "system" ? (isDark ? t("settings.usingDarkTheme") : t("settings.usingLightTheme")) : t("settings.appWillUseTheme", { theme })}
                         </Text>
-                    </View>
+                    </Card>
 
                     {/* Accent Color / Tint Selection */}
                     <View style={styles.tintSection}>
                         <Text variant="body" weight="medium" style={styles.tintLabel}>
                             {t("settings.accentColor")}
                         </Text>
-                        <View style={styles.tintContainer}>
+                        <Card variant="outlined" style={styles.tintContainer}>
                             {TINT_OPTIONS.map((option) => {
                                 const isSelected = tint === option.value;
                                 return (
@@ -284,7 +284,7 @@ export default function SettingsScreen() {
                                     </TouchableOpacity>
                                 );
                             })}
-                        </View>
+                        </Card>
                     </View>
                 </View>
 
@@ -297,7 +297,7 @@ export default function SettingsScreen() {
                         </Text>
                     </View>
 
-                    <View style={styles.optionsContainer}>
+                    <Card variant="outlined" style={styles.optionsContainer}>
                         {LANGUAGE_OPTIONS.map((option, index) => {
                             const isSelected = language === option.value;
                             const isLast = index === LANGUAGE_OPTIONS.length - 1;
@@ -329,7 +329,7 @@ export default function SettingsScreen() {
                                 </View>
                             );
                         })}
-                    </View>
+                    </Card>
                 </View>
 
                 {/* Other Settings Sections (Placeholder) */}

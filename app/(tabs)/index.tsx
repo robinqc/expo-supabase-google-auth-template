@@ -1,3 +1,4 @@
+import { Card } from "@/components/ui";
 import { useTheme } from "@/contexts/ThemeContext";
 import { spacing, useThemedStyles } from "@/lib/styles";
 import { useThemeColors } from "@/lib/theme";
@@ -48,8 +49,6 @@ export default function HomeScreen() {
             paddingHorizontal: spacing.lg,
         },
         card: {
-            backgroundColor: colors.backgroundSecondary,
-            borderRadius: 16,
             padding: spacing.xl,
             marginBottom: spacing.md,
         },
@@ -101,7 +100,7 @@ export default function HomeScreen() {
                             </Text>
                         </View>
 
-                        <View style={styles.card}>
+                        <Card style={styles.card} variant="outlined">
                             <Text variant="title" style={styles.cardTitle}>
                                 {t("home.readyToBuild")}
                             </Text>
@@ -114,34 +113,34 @@ export default function HomeScreen() {
                                     {t("home.getStarted")}
                                 </Button>
                             </View>
-                        </View>
+                        </Card>
 
                         <View style={styles.featuresSection}>
                             <Text variant="title" style={styles.cardTitle}>
                                 {t("home.featuresTitle")}
                             </Text>
 
-                            <View style={styles.featureItem}>
+                            <Card style={styles.featureItem} variant="outlined">
                                 <Ionicons name="lock-closed" size={24} color={colors.primary} style={styles.featureIcon} />
                                 <Text variant="body" textBreakStrategy="simple">
                                     {t("home.featureAuth")}
                                 </Text>
-                            </View>
+                            </Card>
 
-                            <View style={styles.featureItem}>
+                            <Card style={styles.featureItem} variant="outlined">
                                 <Ionicons name="color-palette" size={24} color={colors.primary} style={styles.featureIcon} />
                                 <Text variant="body">{t("home.featureTheme")}</Text>
-                            </View>
+                            </Card>
 
-                            <View style={styles.featureItem}>
+                            <Card style={styles.featureItem} variant="outlined">
                                 <Ionicons name="layers" size={24} color={colors.primary} style={styles.featureIcon} />
                                 <Text variant="body">{t("home.featureUI")}</Text>
-                            </View>
+                            </Card>
 
-                            <View style={styles.featureItem}>
+                            <Card style={styles.featureItem} variant="outlined">
                                 <Ionicons name="code" size={24} color={colors.primary} style={styles.featureIcon} />
                                 <Text variant="body">{t("home.featureTS")}</Text>
-                            </View>
+                            </Card>
                         </View>
 
                         <View style={styles.spacer} />

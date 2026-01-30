@@ -1,3 +1,4 @@
+import { Card } from "@/components/ui";
 import { useAuth } from "@/contexts/AuthContext";
 import { useTheme } from "@/contexts/ThemeContext";
 import { spacing, useThemedStyles } from "@/lib/styles";
@@ -43,7 +44,6 @@ export default function ProfileScreen() {
             paddingTop: 60,
         },
         profileCard: {
-            backgroundColor: colors.backgroundSecondary,
             borderRadius: 20,
             padding: spacing.xl,
             alignItems: "center",
@@ -137,7 +137,7 @@ export default function ProfileScreen() {
             <SafeAreaView style={styles.container} edges={["top", "left", "right"]}>
                 <StatusBar style={isDark ? "light" : "dark"} backgroundColor={colors.background} />
                 <ScrollView style={styles.content} showsVerticalScrollIndicator={false}>
-                    <View style={styles.profileCard}>
+                    <Card variant="outlined" style={styles.profileCard}>
                         <View style={styles.avatarContainer}>
                             <Text variant="heading" style={styles.avatarText}>
                                 👤
@@ -156,7 +156,7 @@ export default function ProfileScreen() {
                                 {t("profile.signIn")}
                             </Button>
                         </View>
-                    </View>
+                    </Card>
                 </ScrollView>
             </SafeAreaView>
         );
@@ -168,7 +168,7 @@ export default function ProfileScreen() {
         <SafeAreaView style={styles.container} edges={["top", "left", "right"]}>
             <StatusBar style={isDark ? "light" : "dark"} backgroundColor={colors.background} />
             <ScrollView style={styles.content} showsVerticalScrollIndicator={false}>
-                <View style={styles.profileCard}>
+                <Card variant="outlined" style={styles.profileCard}>
                     <View style={styles.avatarContainer}>
                         {userProfile?.avatar_url ? (
                             <Image source={{ uri: userProfile.avatar_url }} style={{ width: "100%", height: "100%", borderRadius: 50 }} />
@@ -190,7 +190,7 @@ export default function ProfileScreen() {
                     )}
 
                     <View style={styles.buttonContainer}>
-                        <Button onPress={() => router.push("/settings")} variant="secondary" icon="settings-outline" size="md">
+                        <Button onPress={() => router.push("/settings")} variant="ghost" icon="settings-outline" size="md">
                             {t("profile.settings")}
                         </Button>
                     </View>
@@ -198,7 +198,7 @@ export default function ProfileScreen() {
                     <TouchableOpacity style={styles.signOutButton} onPress={signOut}>
                         <Text style={styles.signOutButtonText}>{t("profile.signOut")}</Text>
                     </TouchableOpacity>
-                </View>
+                </Card>
             </ScrollView>
         </SafeAreaView>
     );
