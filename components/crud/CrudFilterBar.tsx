@@ -1,8 +1,7 @@
-import { Button } from "@/components/ui/Button";
-import { SegmentedControl } from "@/components/ui/SegmentedControl";
 import { useTheme } from "@/contexts/ThemeContext";
 import { spacing, useThemedStyles } from "@/lib/styles";
 import { SortOption, SortableColumn, ViewMode } from "@/types/crud";
+import { Button, SegmentedControl } from "@robin-ux/native";
 import React from "react";
 import { View } from "react-native";
 import { CrudSortButton } from "./CrudSortButton";

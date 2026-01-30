@@ -1,6 +1,6 @@
-import { Button, Input, PasswordInput, Text } from "@/components/ui";
 import { useAuth } from "@/contexts/AuthContext";
 import { spacing, useThemedStyles } from "@/lib/styles";
+import { Button, Input, PasswordInput, Text } from "@robin-ux/native";
 import { router } from "expo-router";
 import { useCallback, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";

@@ -1,7 +1,4 @@
 import { CrudFilterBar, CrudList } from "@/components/crud";
-import { Button } from "@/components/ui";
-import { HeaderView } from "@/components/ui/HeaderView";
-import { Text } from "@/components/ui/Text";
 import { useAuth } from "@/contexts/AuthContext";
 import { useTheme } from "@/contexts/ThemeContext";
 import { useCrudItems } from "@/hooks/useCrudItems";
@@ -9,7 +6,9 @@ import { deleteCrudItem } from "@/lib/crud";
 import { borderRadius, layouts, spacing, useThemedStyles } from "@/lib/styles";
 import { showToast } from "@/lib/toast";
 import { CrudFilters, CrudItem, SortOption, TableColumn, ViewMode } from "@/types/crud";
+import { Button, HeaderView, Text } from "@robin-ux/native";
 import { router } from "expo-router";
+import { StatusBar } from "expo-status-bar";
 import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Alert, View } from "react-native";
@@ -154,7 +153,9 @@ export default function CrudScreen() {
             }
             style={styles.container}
             fixed
+            defaultStyle="dark"
         >
+            <StatusBar style="dark" />
             {/* Filter Bar */}
             <CrudFilterBar
                 viewMode={viewMode}

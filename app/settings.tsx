@@ -1,4 +1,3 @@
-import { Text } from "@/components/ui";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { useTheme } from "@/contexts/ThemeContext";
 import { LanguageCode } from "@/lib/i18n";
@@ -6,6 +5,7 @@ import { borderRadius, layouts, spacing, useThemedStyles } from "@/lib/styles";
 import { useThemeColors } from "@/lib/theme";
 import { TINT_NAMES, TintName, tintMeta } from "@/lib/tints";
 import { Ionicons } from "@expo/vector-icons";
+import { Text } from "@robin-ux/native";
 import { useRouter } from "expo-router";
 import { StatusBar } from "expo-status-bar";
 import { useTranslation } from "react-i18next";

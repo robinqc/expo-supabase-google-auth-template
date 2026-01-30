@@ -1,7 +1,7 @@
-import { Button, Input, PasswordInput, Text } from "@/components/ui";
 import { GOOGLE_AUTH_ENABLED, useAuth } from "@/contexts/AuthContext";
 import { spacing, useThemedStyles } from "@/lib/styles";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { Button, Input, PasswordInput, Text } from "@robin-ux/native";
 import { AuthApiError } from "@supabase/supabase-js";
 import { router } from "expo-router";
 import { StatusBar } from "expo-status-bar";

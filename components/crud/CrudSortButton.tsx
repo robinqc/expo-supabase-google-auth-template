@@ -1,8 +1,7 @@
-import { Button } from "@/components/ui/Button";
-import { Text } from "@/components/ui/Text";
 import { useTheme } from "@/contexts/ThemeContext";
 import { borderRadius, spacing, useThemedStyles } from "@/lib/styles";
 import { SortOption, SortableColumn } from "@/types/crud";
+import { Button, Text } from "@robin-ux/native";
 import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Pressable, TouchableOpacity, View } from "react-native";
@@ -49,7 +48,12 @@ export function CrudSortButton({ value, onChange, sortableColumns = [] }: CrudSo
         },
     }));
 
-    const sortOptions = [{ id: "newest", label: t("crud.newest") }, { id: "oldest", label: t("crud.oldest") }, { id: "alphabetical", label: t("crud.alphabetical") }, ...sortableColumns];
+    const sortOptions = [
+        { id: "newest", label: t("crud.newest") },
+        { id: "oldest", label: t("crud.oldest") },
+        { id: "alphabetical", label: t("crud.alphabetical") },
+        ...sortableColumns,
+    ];
 
     const currentOption = sortOptions.find((opt) => opt.id === value) || sortOptions[0];
 

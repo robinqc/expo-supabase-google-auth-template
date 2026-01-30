@@ -1,8 +1,8 @@
-import { Button, Text } from "@/components/ui";
 import { useAuth } from "@/contexts/AuthContext";
 import { useTheme } from "@/contexts/ThemeContext";
 import { spacing, useThemedStyles } from "@/lib/styles";
 import { useThemeColors } from "@/lib/theme";
+import { Button, Text } from "@robin-ux/native";
 import { router } from "expo-router";
 import { StatusBar } from "expo-status-bar";
 import { useRef, useState } from "react";

@@ -1,7 +1,7 @@
-import { Text } from "@/components/ui/Text";
 import { useTheme } from "@/contexts/ThemeContext";
 import { spacing, useThemedStyles } from "@/lib/styles";
 import { CrudItem as CrudItemType, SortableColumn, StickyColumnConfig, TableColumn, ViewMode } from "@/types/crud";
+import { Text } from "@robin-ux/native";
 import { StickyTable } from "@robin-ux/react-native-sticky-table";
 import React from "react";
 import { ActivityIndicator, FlatList, RefreshControl, View } from "react-native";

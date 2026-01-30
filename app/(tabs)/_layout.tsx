@@ -5,10 +5,11 @@ import { Tabs } from "expo-router";
 import { useTranslation } from "react-i18next";
 
 export default function TabLayout() {
-    const { isDark, colors } = useTheme();
+    const theme = useTheme();
+    const { isDark, colors } = theme;
     const { user } = useAuth();
     const { t } = useTranslation();
-
+    console.log(theme);
     return (
         <Tabs
             screenOptions={{
